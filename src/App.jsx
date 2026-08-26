@@ -542,34 +542,122 @@ function App() {
 
           </div>
 
-          <div className="team-card">
+          <div className="team-grid">
 
-            <div className="team-avatar">
+            {/* MIEMBRO 1 */}
+            <article className="team-card reveal-card">
 
-              <img
-                src="/innovax-logo.png"
-                alt="InnovaX"
-              />
+              <div className="team-photo">
+                <img
+                  src="/team/member-1.jpg"
+                  alt="Nombre del integrante 1"
+                />
+              </div>
 
-            </div>
+              <div className="team-info">
 
-            <div>
+                <span className="team-role">
+                  FUNCIÓN / ROL
+                </span>
 
-              <span className="team-role">
-                SOFTWARE DEVELOPMENT
-              </span>
+                <h3>
+                  Nombre Apellido
+                </h3>
 
-              <h3>
-                Equipo InnovaX
-              </h3>
+                <p>
+                  Breve descripción del integrante del equipo.
+                </p>
 
-              <p>
-                Un equipo enfocado en crear soluciones
-                digitales, desarrollar productos y
-                transformar ideas en tecnología.
-              </p>
+              </div>
 
-            </div>
+            </article>
+
+
+            {/* MIEMBRO 2 */}
+            <article className="team-card reveal-card">
+
+              <div className="team-photo">
+                <img
+                  src="/team/member-2.jpg"
+                  alt="Nombre del integrante 2"
+                />
+              </div>
+
+              <div className="team-info">
+
+                <span className="team-role">
+                  FUNCIÓN / ROL
+                </span>
+
+                <h3>
+                  Nombre Apellido
+                </h3>
+
+                <p>
+                  Breve descripción del integrante del equipo.
+                </p>
+
+              </div>
+
+            </article>
+
+
+            {/* MIEMBRO 3 */}
+            <article className="team-card reveal-card">
+
+              <div className="team-photo">
+                <img
+                  src="/team/member-3.jpg"
+                  alt="Nombre del integrante 3"
+                />
+              </div>
+
+              <div className="team-info">
+
+                <span className="team-role">
+                  FUNCIÓN / ROL
+                </span>
+
+                <h3>
+                  Nombre Apellido
+                </h3>
+
+                <p>
+                  Breve descripción del integrante del equipo.
+                </p>
+
+              </div>
+
+            </article>
+
+
+            {/* MIEMBRO 4 */}
+            <article className="team-card reveal-card">
+
+              <div className="team-photo">
+                <img
+                  src="/team/member-4.jpg"
+                  alt="Nombre del integrante 4"
+                />
+              </div>
+
+              <div className="team-info">
+
+                <span className="team-role">
+                  FUNCIÓN / ROL
+                </span>
+
+                <h3>
+                  Nombre Apellido
+                </h3>
+
+                <p>
+                  Breve descripción del integrante del equipo.
+                </p>
+
+              </div>
+
+            </article>
 
           </div>
 
@@ -634,12 +722,10 @@ function App() {
         >
 
           <div className="contact-background">
-
             <img
               src="/innovax-logo.png"
               alt=""
             />
-
           </div>
 
           <div className="section-label">
@@ -656,6 +742,95 @@ function App() {
             Contanos qué querés construir y demos juntos
             el próximo paso.
           </p>
+
+
+          {/* FORMULARIO */}
+          <form
+            className="contact-form"
+            action="mailto:hola@innovax.com.ar"
+            method="POST"
+            encType="text/plain"
+          >
+
+            <div className="contact-form-row">
+
+              <div className="contact-field">
+                <label htmlFor="nombre">
+                  Nombre
+                </label>
+
+                <input
+                  id="nombre"
+                  name="Nombre"
+                  type="text"
+                  placeholder="Tu nombre"
+                  required
+                />
+              </div>
+
+
+              <div className="contact-field">
+                <label htmlFor="empresa">
+                  Empresa
+                </label>
+
+                <input
+                  id="empresa"
+                  name="Empresa"
+                  type="text"
+                  placeholder="Nombre de tu empresa"
+                />
+              </div>
+
+            </div>
+
+
+            <div className="contact-field">
+
+              <label htmlFor="email">
+                Email
+              </label>
+
+              <input
+                id="email"
+                name="Email"
+                type="email"
+                placeholder="tu@email.com"
+                required
+              />
+
+            </div>
+
+
+            <div className="contact-field">
+
+              <label htmlFor="mensaje">
+                Mensaje
+              </label>
+
+              <textarea
+                id="mensaje"
+                name="Mensaje"
+                rows="5"
+                placeholder="Contanos sobre tu proyecto..."
+                required
+              />
+
+            </div>
+
+
+            <button
+              type="submit"
+              className="button primary contact-submit"
+            >
+              Enviar mensaje
+              <span>↗</span>
+            </button>
+
+          </form>
+
+
+          {/* BOTONES ORIGINALES — NO SE TOCAN */}
 
           <div className="contact-buttons">
 
