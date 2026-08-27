@@ -1,35 +1,19 @@
-import { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./index.css";
 
+const CONTACT = {
+  instagramHandle: "innovax.team",
+  instagramUrl: "https://instagram.com/innovax.team",
+  email: "innovax.devs@gmail.com",
+  whatsappUrl: "https://wa.me/5490000000000",
+  phoneHref: "tel:+5490000000000",
+};
+
 const services = [
-  {
-    number: "01",
-    icon: "⌁",
-    title: "Desarrollo de software",
-    description:
-      "Creamos soluciones de software a medida para optimizar procesos y resolver necesidades reales.",
-  },
-  {
-    number: "02",
-    icon: "</>",
-    title: "Desarrollo web",
-    description:
-      "Sitios y aplicaciones web modernas, rápidas, responsive y pensadas para generar resultados.",
-  },
-  {
-    number: "03",
-    icon: "◇",
-    title: "Sistemas a medida",
-    description:
-      "Construimos sistemas adaptados a la forma de trabajar de cada empresa.",
-  },
-  {
-    number: "04",
-    icon: "↗",
-    title: "Integraciones & APIs",
-    description:
-      "Conectamos plataformas, servicios y sistemas para automatizar procesos.",
-  },
+  { tag: "software.build()", title: "Desarrollo de software", description: "Soluciones a medida para optimizar procesos, resolver problemas y convertir ideas en productos reales.", status: "en producción" },
+  { tag: "web.deploy()", title: "Desarrollo web", description: "Experiencias web rápidas, responsive y modernas, diseñadas para representar marcas y generar resultados.", status: "en producción" },
+  { tag: "system.scale()", title: "Sistemas a medida", description: "Plataformas construidas alrededor de la forma real de trabajar de cada empresa.", status: "activo" },
+  { tag: "api.connect()", title: "Integraciones & APIs", description: "Conectamos servicios y sistemas para eliminar tareas manuales y automatizar procesos.", status: "activo" },
 ];
 
 const projects = [
@@ -37,966 +21,835 @@ const projects = [
     number: "01",
     category: "SOFTWARE",
     title: "Business Platform",
-    description:
-      "Sistema empresarial desarrollado para centralizar procesos y mejorar la gestión.",
+    description: "Sistema empresarial para centralizar operaciones y mejorar la gestión.",
     technologies: "Java · Spring Boot · React",
+    diff: "+1,204 −86",
+    branch: "main",
+    highlights: [
+      "Reducción del 40% en tiempo de gestión administrativa",
+      "Roles y permisos granulares por área",
+      "Reportes y dashboards en tiempo real",
+    ],
   },
   {
     number: "02",
     category: "WEB APP",
     title: "Digital Experience",
-    description:
-      "Aplicación web moderna enfocada en experiencia de usuario, rendimiento y escalabilidad.",
+    description: "Aplicación web enfocada en experiencia, rendimiento y escalabilidad.",
     technologies: "React · JavaScript · REST APIs",
+    diff: "+842 −31",
+    branch: "main",
+    highlights: [
+      "Lighthouse 95+ en performance",
+      "Diseño responsive mobile-first",
+      "SEO técnico optimizado desde el build",
+    ],
   },
   {
     number: "03",
     category: "MICROSERVICES",
     title: "Scalable System",
-    description:
-      "Arquitectura distribuida preparada para crecer y soportar diferentes servicios.",
+    description: "Arquitectura distribuida preparada para crecer junto al negocio.",
     technologies: "Spring Boot · Kafka · Docker",
+    diff: "+2,015 −214",
+    branch: "main",
+    highlights: [
+      "Procesamiento de eventos en tiempo real",
+      "Despliegue automatizado con Docker + CI/CD",
+      "Escalado horizontal sin downtime",
+    ],
   },
 ];
 
-const technologies = [
-  "Java",
-  "Spring Boot",
-  "React",
-  "JavaScript",
-  "Python",
-  "Kafka",
-  "Docker",
-  "PostgreSQL",
-  "Git",
-  "REST APIs",
+const process = [
+  { number: "01", flag: "--innovate", title: "Innovation.", text: "Escuchamos el problema real antes de pensar en código. Ahí nace cada decisión técnica." },
+  { number: "02", flag: "--create", title: "Creation.", text: "Diseñamos y construimos el producto, iterando rápido y mostrando avances reales." },
+  { number: "03", flag: "--transform", title: "Transformation.", text: "Entregamos un sistema que cambia cómo tu negocio opera, no solo una app más." },
 ];
 
-function App() {
-  /*
-   * Animaciones al entrar las secciones en pantalla
-   */
+const differences = [
+  ["--custom", "Desarrollo a medida", "Nada de soluciones genéricas. Construimos alrededor de tu problema."],
+  ["--scalable", "Arquitectura escalable", "Pensamos el producto para hoy sin cerrarle la puerta al mañana."],
+  ["--modern", "Tecnología moderna", "Herramientas actuales para productos rápidos, mantenibles y sólidos."],
+  ["--direct", "Comunicación directa", "Un equipo chico, cercano y enfocado en entender lo que realmente necesitás."],
+];
+
+const team = [
+  { slug: "elias-raimundo", name: "Elias Raimundo", linkedin: "https://linkedin.com/in/elias-raimundo" },
+  { slug: "mateo-calcagno", name: "Mateo Calcagno", linkedin: "https://linkedin.com/in/mateo-calcagno" },
+  { slug: "pilar-orlando", name: "Pilar Orlando", linkedin: "https://linkedin.com/in/pilar-orlando" },
+  { slug: "milagros-delfino", name: "Milagros Delfino", linkedin: "https://linkedin.com/in/miladelfino" },
+];
+
+// ---------------------------------------------------------------------------
+// Real, hand-drawn icons (no external icon package required).
+// ---------------------------------------------------------------------------
+function IconInstagram(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" />
+      <circle cx="12" cy="12" r="4.3" />
+      <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+function IconPhone(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M21 16.6v2.9a1.9 1.9 0 0 1-2.07 1.9 18.8 18.8 0 0 1-8.2-2.92 18.5 18.5 0 0 1-5.7-5.7A18.8 18.8 0 0 1 2.1 4.57 1.9 1.9 0 0 1 3.99 2.5H6.9a1.9 1.9 0 0 1 1.9 1.63c.12.91.34 1.81.66 2.67a1.9 1.9 0 0 1-.43 2L7.86 9.97a15.2 15.2 0 0 0 5.7 5.7l1.18-1.18a1.9 1.9 0 0 1 2-.43c.86.32 1.76.54 2.67.66A1.9 1.9 0 0 1 21 16.6Z" />
+    </svg>
+  );
+}
+
+function IconWhatsApp(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M12.04 2.1c-5.46 0-9.9 4.43-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.24-1.37a9.86 9.86 0 0 0 4.8 1.22h.01c5.46 0 9.9-4.43 9.9-9.9 0-2.64-1.03-5.13-2.9-6.99a9.83 9.83 0 0 0-6.99-2.9Zm5.79 14.07c-.24.68-1.4 1.32-1.93 1.4-.5.08-1.12.11-1.81-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.15-4.9-4.34-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.01-2.41.27-.29.58-.36.77-.36.2 0 .39 0 .56.01.18.01.42-.07.66.5.24.58.83 2.01.9 2.16.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.17-.3.38-.42.51-.14.15-.29.31-.13.6.17.29.75 1.24 1.61 2.01 1.11 1 2.04 1.31 2.34 1.46.29.14.46.12.63-.07.18-.2.74-.86.94-1.16.19-.29.39-.24.65-.14.27.09 1.7.8 1.99.95.29.14.49.21.56.33.07.13.07.7-.17 1.38Z" />
+    </svg>
+  );
+}
+
+function IconLinkedIn(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" {...props}>
+      <rect x="2" y="2" width="20" height="20" rx="4.5" fill="currentColor" />
+      <rect x="6.3" y="9.6" width="2.7" height="8.6" fill="var(--bg)" />
+      <circle cx="7.65" cy="6.1" r="1.55" fill="var(--bg)" />
+      <path d="M11.6 9.6h2.7v1.25c.55-.85 1.5-1.45 2.85-1.45 2.45 0 3.35 1.6 3.35 4v4.8h-2.7v-4.25c0-1.05-.4-1.8-1.4-1.8-1.1 0-1.65.75-1.65 1.8v4.25h-2.7V9.6Z" fill="var(--bg)" />
+    </svg>
+  );
+}
+
+function IconMail(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="2.5" y="4.5" width="19" height="15" rx="2.5" />
+      <path d="m3 6 9 6.5L21 6" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Motion helpers — everything speaks the same "terminal / build log" language
+// as the rest of the site, instead of scattered generic effects.
+// ---------------------------------------------------------------------------
+function prefersReducedMotion() {
+  return typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+}
+function isFinePointer() {
+  return typeof window !== "undefined" && window.matchMedia?.("(hover: hover) and (pointer: fine)").matches;
+}
+
+// A blinking-cursor "custom cursor": a dot that tracks the mouse instantly
+// and a ring that trails it, growing over anything interactive.
+function CustomCursor() {
+  const dotRef = useRef(null);
+  const ringRef = useRef(null);
+
   useEffect(() => {
-    const elements = document.querySelectorAll(
-      ".reveal, .reveal-card"
-    );
+    if (!isFinePointer() || prefersReducedMotion()) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
-      {
-        threshold: 0.12,
-      }
-    );
+    let mouseX = 0;
+    let mouseY = 0;
+    let ringX = 0;
+    let ringY = 0;
+    let raf;
 
-    elements.forEach((element) => {
-      observer.observe(element);
+    const move = (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (dotRef.current) dotRef.current.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+    };
+
+    const loop = () => {
+      ringX += (mouseX - ringX) * 0.18;
+      ringY += (mouseY - ringY) * 0.18;
+      if (ringRef.current) ringRef.current.style.transform = `translate(${ringX}px, ${ringY}px)`;
+      raf = requestAnimationFrame(loop);
+    };
+
+    const grow = () => document.body.classList.add("cursor-hover");
+    const shrink = () => document.body.classList.remove("cursor-hover");
+    const interactive = document.querySelectorAll("a, button, .project-card, input, textarea");
+    interactive.forEach((el) => {
+      el.addEventListener("mouseenter", grow);
+      el.addEventListener("mouseleave", shrink);
     });
 
-    return () => observer.disconnect();
+    document.addEventListener("mousemove", move);
+    raf = requestAnimationFrame(loop);
+
+    return () => {
+      document.removeEventListener("mousemove", move);
+      interactive.forEach((el) => {
+        el.removeEventListener("mouseenter", grow);
+        el.removeEventListener("mouseleave", shrink);
+      });
+      cancelAnimationFrame(raf);
+    };
   }, []);
 
   return (
+    <>
+      <div className="cursor-ring" ref={ringRef} aria-hidden="true" />
+      <div className="cursor-dot" ref={dotRef} aria-hidden="true" />
+    </>
+  );
+}
+
+// Thin build-progress bar pinned to the top of the viewport.
+function ScrollProgress() {
+  const barRef = useRef(null);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - doc.clientHeight;
+      const ratio = max > 0 ? doc.scrollTop / max : 0;
+      if (barRef.current) barRef.current.style.transform = `scaleX(${ratio})`;
+    };
+    onScroll();
+    document.addEventListener("scroll", onScroll, { passive: true });
+    return () => document.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <div className="scroll-progress" aria-hidden="true">
+      <div className="scroll-progress-bar" ref={barRef} />
+    </div>
+  );
+}
+
+// Wraps a single interactive child and makes it drift gently toward the
+// cursor, like a magnet — snaps back smoothly on mouse leave.
+function Magnetic({ children, strength = 14 }) {
+  const ref = useRef(null);
+
+  const handleMove = (e) => {
+    if (!isFinePointer() || prefersReducedMotion()) return;
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    el.style.transition = "transform 0s";
+    el.style.transform = `translate(${x / strength}px, ${y / strength}px)`;
+  };
+
+  const handleLeave = () => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.transition = "transform .5s cubic-bezier(.16,1,.3,1)";
+    el.style.transform = "";
+  };
+
+  return React.cloneElement(children, {
+    ref,
+    onMouseMove: handleMove,
+    onMouseLeave: handleLeave,
+  });
+}
+
+// "Decodes" text from scrambled characters into the real string once it
+// scrolls into view — reads like a terminal resolving a value.
+const SCRAMBLE_CHARS = "!<>-_\\/[]{}=+*^?#01";
+
+function Scramble({ text, as: Tag = "span", className }) {
+  const ref = useRef(null);
+  const [display, setDisplay] = useState(text);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || prefersReducedMotion()) return;
+
+    let interval;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          let iteration = 0;
+          interval = setInterval(() => {
+            setDisplay(
+              text
+                .split("")
+                .map((ch, idx) => {
+                  if (ch === " ") return " ";
+                  if (idx < iteration) return text[idx];
+                  return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+                })
+                .join("")
+            );
+            iteration += 0.5;
+            if (iteration >= text.length) {
+              clearInterval(interval);
+              setDisplay(text);
+            }
+          }, 32);
+          observer.disconnect();
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      clearInterval(interval);
+    };
+  }, [text]);
+
+  return (
+    <Tag ref={ref} className={className}>
+      {display}
+    </Tag>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Terminal signature — a small, live "build log" for InnovaX itself.
+// ---------------------------------------------------------------------------
+const BUILD_SCRIPT = [
+  { type: "cmd", text: "innovax init --idea" },
+  { type: "out", text: "> analizando el problema real del negocio" },
+  { type: "out", text: "> diseñando arquitectura escalable" },
+  { type: "out", text: "> conectando integraciones & APIs" },
+  { type: "ok", text: "✓ build lista para producción" },
+];
+
+function TerminalSignature() {
+  const [lineIndex, setLineIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [done, setDone] = useState([]);
+  const reduceMotion = useRef(
+    typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+  );
+
+  useEffect(() => {
+    if (reduceMotion.current) {
+      setDone(BUILD_SCRIPT);
+      return;
+    }
+
+    if (lineIndex >= BUILD_SCRIPT.length) {
+      const resetTimer = setTimeout(() => {
+        setDone([]);
+        setLineIndex(0);
+        setCharIndex(0);
+      }, 2200);
+      return () => clearTimeout(resetTimer);
+    }
+
+    const current = BUILD_SCRIPT[lineIndex];
+    if (charIndex <= current.text.length) {
+      const t = setTimeout(() => setCharIndex((c) => c + 1), current.type === "cmd" ? 55 : 18);
+      return () => clearTimeout(t);
+    }
+
+    const advance = setTimeout(() => {
+      setDone((d) => [...d, current]);
+      setLineIndex((i) => i + 1);
+      setCharIndex(0);
+    }, current.type === "ok" ? 900 : 260);
+    return () => clearTimeout(advance);
+  }, [lineIndex, charIndex]);
+
+  const current = BUILD_SCRIPT[lineIndex];
+  const typing = current ? current.text.slice(0, charIndex) : "";
+
+  return (
+    <div className="terminal" role="img" aria-label="Consola simulada mostrando el proceso de construcción de un proyecto InnovaX">
+      <div className="terminal-bar">
+        <span className="dot dot-red" />
+        <span className="dot dot-yellow" />
+        <span className="dot dot-green" />
+        <span className="terminal-title">innovax — build</span>
+      </div>
+      <div className="terminal-body">
+        {done.map((line, i) => (
+          <div className={`terminal-line t-${line.type}`} key={i}>
+            {line.type === "cmd" ? <span className="prompt">$</span> : null} {line.text}
+          </div>
+        ))}
+        {current && (
+          <div className={`terminal-line t-${current.type}`}>
+            {current.type === "cmd" ? <span className="prompt">$</span> : null} {typing}
+            <span className="cursor" />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeProcess, setActiveProcess] = useState(0);
+  const [flippedCards, setFlippedCards] = useState(() => new Set());
+  const [activeProject, setActiveProject] = useState(0);
+
+  const trackRef = useRef(null);
+  const isDragging = useRef(false);
+  const dragMoved = useRef(false);
+  const dragStart = useRef({ x: 0, scrollLeft: 0 });
+
+  useEffect(() => {
+    const elements = document.querySelectorAll(".reveal, .reveal-card");
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add("visible");
+      }),
+      { threshold: 0.12 }
+    );
+    elements.forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
+  }, []);
+
+  // Horizontal "commit rail": mouse-wheel and drag both move the track
+  // sideways, so the projects section breaks out of the vertical scroll.
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const handleWheel = (e) => {
+      if (prefersReducedMotion()) return;
+      const { scrollLeft, scrollWidth, clientWidth } = track;
+      const atStart = scrollLeft <= 2;
+      const atEnd = scrollLeft >= scrollWidth - clientWidth - 2;
+      const goingDown = e.deltaY > 0;
+      if ((atEnd && goingDown) || (atStart && !goingDown)) return;
+      e.preventDefault();
+      track.scrollLeft += e.deltaY;
+    };
+
+    const handleScroll = () => {
+      const cardWidth = track.scrollWidth / projects.length;
+      const idx = Math.round(track.scrollLeft / cardWidth);
+      setActiveProject(Math.min(projects.length - 1, Math.max(0, idx)));
+    };
+
+    track.addEventListener("wheel", handleWheel, { passive: false });
+    track.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      track.removeEventListener("wheel", handleWheel);
+      track.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const closeMenu = () => setMenuOpen(false);
+
+  const toggleFlip = (index) => {
+    if (dragMoved.current) {
+      dragMoved.current = false;
+      return;
+    }
+    setFlippedCards((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) next.delete(index);
+      else next.add(index);
+      return next;
+    });
+  };
+
+  const handlePointerDown = (e) => {
+    if (e.pointerType !== "mouse" || !trackRef.current) return;
+    isDragging.current = true;
+    dragMoved.current = false;
+    dragStart.current = { x: e.clientX, scrollLeft: trackRef.current.scrollLeft };
+    trackRef.current.classList.add("is-dragging");
+  };
+
+  const handlePointerMove = (e) => {
+    if (!isDragging.current || !trackRef.current) return;
+    const delta = e.clientX - dragStart.current.x;
+    if (Math.abs(delta) > 5) dragMoved.current = true;
+    trackRef.current.scrollLeft = dragStart.current.scrollLeft - delta;
+  };
+
+  const endDrag = () => {
+    isDragging.current = false;
+    trackRef.current?.classList.remove("is-dragging");
+  };
+
+  const scrollToProject = (index) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const cardWidth = track.scrollWidth / projects.length;
+    track.scrollTo({ left: cardWidth * index, behavior: "smooth" });
+  };
+
+  const handleCardTilt = (e) => {
+    if (!isFinePointer() || prefersReducedMotion()) return;
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const rotateX = ((y - rect.height / 2) / rect.height) * -8;
+    const rotateY = ((x - rect.width / 2) / rect.width) * 8;
+    card.style.transition = "transform 0s";
+    card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+  };
+
+  const resetCardTilt = (e) => {
+    const card = e.currentTarget;
+    card.style.transition = "transform .5s cubic-bezier(.16,1,.3,1)";
+    card.style.transform = "";
+  };
+
+  return (
     <div className="site">
-
-      {/* =====================================
-          NOISE
-      ====================================== */}
-
       <div className="noise" />
+      <div className="grid-overlay" />
+      <CustomCursor />
+      <ScrollProgress />
 
-      {/* =====================================
-          NAVBAR
-      ====================================== */}
-
-      <header className="navbar">
-
-        <a href="#inicio" className="brand">
-          <img
-            src="/innovax-logo.png"
-            alt="InnovaX"
-          />
-
+      <header className={`navbar ${menuOpen ? "menu-open" : ""}`}>
+        <a href="#inicio" className="brand" onClick={closeMenu}>
+          <img src="/innovax-logo.png" alt="InnovaX" />
           <span>InnovaX</span>
         </a>
 
+        <button
+          className="menu-toggle"
+          onClick={() => setMenuOpen((value) => !value)}
+          aria-label="Abrir menú"
+          aria-expanded={menuOpen}
+        >
+          <span />
+          <span />
+        </button>
+
         <nav>
-          <a href="#servicios">Servicios</a>
-          <a href="#proyectos">Proyectos</a>
-          <a href="#nosotros">Nosotros</a>
-          <a href="#equipo">Equipo</a>
-          <a href="#tech-stack">Tech Stack</a>
-          <a href="#contacto">Contacto</a>
+          <a href="#servicios" onClick={closeMenu}>Servicios</a>
+          <a href="#proyectos" onClick={closeMenu}>Proyectos</a>
+          <a href="#nosotros" onClick={closeMenu}>Nosotros</a>
+          <a href="#equipo" onClick={closeMenu}>Equipo</a>
+          <a href="#contacto" onClick={closeMenu}>Contacto</a>
         </nav>
 
-        <a
-          href="#contacto"
-          className="nav-button"
-        >
-          Hablemos
-          <span>↗</span>
-        </a>
-
+        <Magnetic>
+          <a href="#contacto" className="nav-button" onClick={closeMenu}>
+            Hablemos <span>↗</span>
+          </a>
+        </Magnetic>
       </header>
 
-
       <main>
-
-        {/* =====================================
-            HERO
-        ====================================== */}
-
-        <section
-          id="inicio"
-          className="hero"
-        >
-
+        <section id="inicio" className="hero">
+          <div className="hero-grid" />
+          <div className="hero-orbit orbit-one" />
+          <div className="hero-orbit orbit-two" />
           <div className="hero-glow cyan-glow" />
           <div className="hero-glow purple-glow" />
 
-          {/* Logo gigante de fondo */}
-          <div className="background-logo">
-            <img
-              src="/innovax-logo.png"
-              alt=""
-            />
-          </div>
-
           <div className="hero-content">
-
             <div className="eyebrow hero-animation">
-              <span />
-              SOFTWARE DEVELOPMENT · ARGENTINA
+              <span /> SOFTWARE DEVELOPMENT · ARGENTINA
             </div>
 
-            <h1 className="hero-animation hero-title">
-              Desarrollamos
+            <h1 className="hero-title hero-animation">
+              Ideas que se
               <br />
-
-              <span>tecnología</span>
-
+              convierten en
               <br />
-
-              para hacer crecer
-              tus ideas.
+              <Scramble as="span" className="accent" text="software." />
             </h1>
 
-            <p className="hero-animation hero-description">
-              Creamos software, aplicaciones web y soluciones
-              digitales a medida para empresas que buscan
-              innovar y crecer.
+            <p className="hero-description hero-animation">
+              Diseñamos y desarrollamos productos digitales, aplicaciones web
+              y sistemas a medida para empresas que quieren avanzar.
             </p>
 
             <div className="hero-buttons hero-animation">
-
-              <a
-                href="#proyectos"
-                className="button primary"
-              >
-                Ver proyectos
-                <span>↗</span>
-              </a>
-
-              <a
-                href="#contacto"
-                className="button secondary"
-              >
-                Contanos tu idea
-              </a>
-
+              <Magnetic>
+                <a href="#proyectos" className="button primary">Explorar proyectos <span>↗</span></a>
+              </Magnetic>
+              <Magnetic>
+                <a href="#contacto" className="button secondary">Contanos tu idea</a>
+              </Magnetic>
             </div>
-
           </div>
 
-          <div className="hero-bottom">
-
-            <span>Innovación</span>
-            <span>Software</span>
-            <span>Desarrollo</span>
-            <span>Transformación</span>
-
+          <div className="hero-visual hero-animation">
+            <TerminalSignature />
           </div>
 
+          <div className="hero-meta">
+            <span>01 — 05</span>
+            <span>INNOVATION · CREATION · TRANSFORMATION</span>
+            <span>SCROLL ↓</span>
+          </div>
+
+          <div className="hero-side-label">INNOVAX / DIGITAL SYSTEMS</div>
         </section>
 
-
-        {/* =====================================
-            SERVICIOS
-        ====================================== */}
-
-        <section
-          id="servicios"
-          className="section services reveal"
-        >
-
-          <div className="section-heading">
-
-            <div className="section-label">
-              LO QUE HACEMOS
+        <section id="servicios" className="section services reveal">
+          <div className="section-intro">
+            <div>
+              <div className="section-label">01 / CAPACIDADES</div>
+              <h2>Construimos lo que<br /><Scramble as="span" className="accent" text="todavía no existe." /></h2>
             </div>
-
-            <h2>
-              Soluciones que
-              <br />
-              <span>hacen la diferencia.</span>
-            </h2>
-
-            <p>
-              Diseñamos soluciones tecnológicas pensadas
-              para resolver problemas reales y generar
-              resultados.
-            </p>
-
+            <p>Desde una idea inicial hasta un sistema completo. Tecnología pensada para resolver, no para complicar.</p>
           </div>
 
-          <div className="services-grid">
+          <div className="services-window">
+            <div className="terminal-bar services-bar">
+              <span className="dot dot-red" />
+              <span className="dot dot-yellow" />
+              <span className="dot dot-green" />
+              <span className="terminal-title">innovax/services.js</span>
+            </div>
+            <div className="services-grid">
+              {services.map((service) => (
+                <article
+                  className="service-card reveal-card"
+                  key={service.tag}
+                  onMouseMove={handleCardTilt}
+                  onMouseLeave={resetCardTilt}
+                >
+                  <div className="service-top">
+                    <span className="service-tag">{service.tag}</span>
+                    <span className="service-status"><i /> {service.status}</span>
+                  </div>
+                  <div className="service-content">
+                    <h3>{service.title}</h3>
+                    <p>{service.description}</p>
+                    <a href="#contacto">Conocer más <span>↗</span></a>
+                  </div>
+                  <div className="card-corner" />
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
 
-            {services.map((service) => (
+        <section id="proyectos" className="section projects reveal">
+          <div className="section-intro">
+            <div>
+              <div className="section-label">02 / SELECTED WORK</div>
+              <h2>Hecho para<br /><Scramble as="span" className="accent" text="funcionar." /></h2>
+            </div>
+            <p>Proyectos que combinan producto, ingeniería y diseño para transformar necesidades concretas en soluciones digitales. Arrastrá, scrolleá o pasá el mouse: cada card tiene el detalle atrás.</p>
+          </div>
+
+          <div
+            className="projects-track"
+            ref={trackRef}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={endDrag}
+            onPointerLeave={endDrag}
+          >
+            {projects.map((project, index) => (
               <article
-                className="service-card reveal-card"
-                key={service.number}
+                className={`project-card project-${index + 1} reveal-card ${flippedCards.has(index) ? "is-flipped" : ""}`}
+                key={project.number}
+                onClick={() => toggleFlip(index)}
               >
-
-                <div className="service-top">
-
-                  <div className="service-icon">
-                    {service.icon}
+                <div className="card-flip-inner">
+                  <div className="card-face card-face-front">
+                    <div className="project-header">
+                      <span>{project.number}</span>
+                      <span>{project.category}</span>
+                    </div>
+                    <div className="project-content">
+                      <small>{project.technologies}</small>
+                      <h3>{project.title}</h3>
+                      <p>{project.description}</p>
+                    </div>
+                    <span className="flip-hint">⟲ ver detalles</span>
                   </div>
 
-                  <span>
-                    {service.number}
-                  </span>
-
+                  <div className="card-face card-face-back">
+                    <div className="project-header">
+                      <span>{project.number}</span>
+                      <span>DETAILS</span>
+                    </div>
+                    <div className="project-content">
+                      <h3>{project.title}</h3>
+                      <ul className="project-highlights">
+                        {project.highlights.map((point) => (
+                          <li key={point}>{point}</li>
+                        ))}
+                      </ul>
+                      <div className="project-gitline">
+                        <span className="git-branch">⎇ {project.branch}</span>
+                        <span className="git-diff">
+                          <em className="add">{project.diff.split(" ")[0]}</em>
+                          <em className="rem">{project.diff.split(" ")[1]}</em>
+                        </span>
+                      </div>
+                      <a href="#contacto">Hablemos de esto <span>↗</span></a>
+                    </div>
+                  </div>
                 </div>
-
-                <div className="service-content">
-
-                  <h3>
-                    {service.title}
-                  </h3>
-
-                  <p>
-                    {service.description}
-                  </p>
-
-                  <a href="#contacto">
-                    Consultar
-                    <span>→</span>
-                  </a>
-
-                </div>
-
               </article>
             ))}
-
           </div>
 
-        </section>
-
-
-        {/* =====================================
-            PROYECTOS
-        ====================================== */}
-
-        <section
-          id="proyectos"
-          className="section projects reveal"
-        >
-
-          <div className="section-heading">
-
-            <div className="section-label">
-              PORTFOLIO
+          <div className="projects-rail">
+            <span className="rail-hint">arrastrá o scrolleá →</span>
+            <div className="rail-dots">
+              {projects.map((project, index) => (
+                <button
+                  type="button"
+                  key={project.number}
+                  className={`rail-dot ${activeProject === index ? "active" : ""}`}
+                  onClick={() => scrollToProject(index)}
+                  aria-label={`Ver proyecto ${project.title}`}
+                />
+              ))}
             </div>
-
-            <h2>
-              Proyectos que
-              <br />
-              <span>construimos.</span>
-            </h2>
-
-            <p>
-              Soluciones desarrolladas utilizando tecnologías
-              modernas y arquitecturas preparadas para crecer.
-            </p>
-
           </div>
-
-          <div className="projects-grid">
-
-            {projects.map((project) => (
-              <article
-                className="project-card reveal-card"
-                key={project.number}
-              >
-
-                <div className="project-background">
-                  <img
-                    src="/innovax-logo.png"
-                    alt=""
-                  />
-                </div>
-
-                <div className="project-header">
-
-                  <span>
-                    {project.number}
-                  </span>
-
-                  <span>
-                    {project.category}
-                  </span>
-
-                </div>
-
-                <div className="project-content">
-
-                  <h3>
-                    {project.title}
-                  </h3>
-
-                  <p>
-                    {project.description}
-                  </p>
-
-                  <small>
-                    {project.technologies}
-                  </small>
-
-                  <a href="#contacto">
-                    Ver proyecto →
-                  </a>
-
-                </div>
-
-              </article>
-            ))}
-
-          </div>
-
         </section>
 
+        <section className="manifesto reveal">
+          <div className="manifesto-top">
+            <div className="section-label">PROCESO</div>
+            <p className="manifesto-kicker">La tecnología no es el destino. Es lo que usamos para llegar más lejos.</p>
+          </div>
 
-        {/* =====================================
-            DIFERENCIALES
-        ====================================== */}
+          <div className="process-list">
+            {process.map((step, index) => (
+              <button
+                type="button"
+                key={step.number}
+                className={`process-item ${activeProcess === index ? "active" : ""}`}
+                onMouseEnter={() => setActiveProcess(index)}
+                onFocus={() => setActiveProcess(index)}
+              >
+                <span className="process-title">{step.title}</span>
+                <span className="process-flag">{step.flag}</span>
+                <span className="process-text">{step.text}</span>
+              </button>
+            ))}
+          </div>
+        </section>
 
         <section className="difference reveal">
-
-          <div className="difference-logo">
-
-            <img
-              src="/innovax-logo.png"
-              alt=""
-            />
-
+          <div className="difference-top">
+            <div className="section-label">03 / POR QUÉ INNOVAX</div>
+            <h2>Menos ruido.<br /><Scramble as="span" className="accent" text="Más producto." /></h2>
           </div>
-
-          <div className="section-label">
-            POR QUÉ INNOVAX
-          </div>
-
-          <h2>
-            Tecnología pensada
-            <br />
-            para <span>crecer.</span>
-          </h2>
-
           <div className="difference-grid">
-
-            <div className="difference-item">
-
-              <strong>01</strong>
-
-              <h3>
-                Desarrollo a medida
-              </h3>
-
-              <p>
-                Cada solución se construye según
-                las necesidades específicas de cada
-                proyecto.
-              </p>
-
-            </div>
-
-            <div className="difference-item">
-
-              <strong>02</strong>
-
-              <h3>
-                Arquitectura escalable
-              </h3>
-
-              <p>
-                Diseñamos sistemas preparados para
-                acompañar el crecimiento de tu negocio.
-              </p>
-
-            </div>
-
-            <div className="difference-item">
-
-              <strong>03</strong>
-
-              <h3>
-                Tecnología moderna
-              </h3>
-
-              <p>
-                Utilizamos herramientas actuales para
-                crear productos rápidos y mantenibles.
-              </p>
-
-            </div>
-
-            <div className="difference-item">
-
-              <strong>04</strong>
-
-              <h3>
-                Comunicación directa
-              </h3>
-
-              <p>
-                Trabajamos cerca del cliente para
-                entender realmente cada problema.
-              </p>
-
-            </div>
-
+            {differences.map(([flag, title, text]) => (
+              <div className="difference-item" key={flag}>
+                <strong>{flag}</strong>
+                <div>
+                  <h3>{title}</h3>
+                  <p>{text}</p>
+                </div>
+              </div>
+            ))}
           </div>
-
         </section>
 
-
-        {/* =====================================
-            NOSOTROS
-        ====================================== */}
-
-        <section
-          id="nosotros"
-          className="section about reveal"
-        >
-
+        <section id="nosotros" className="section about reveal">
           <div className="about-label">
-
-            <div className="section-label">
-              QUIÉNES SOMOS
-            </div>
-
+            <div className="section-label">04 / NOSOTROS</div>
+            <div className="about-index">INNOVA<br />X</div>
           </div>
-
           <div className="about-content">
-
-            <h2>
-              Una idea puede ser
-              <br />
-              el comienzo de
-              <span> algo grande.</span>
-            </h2>
-
-            <p>
-              En InnovaX creamos tecnología para potenciar
-              negocios y empresas. Combinamos desarrollo
-              de software, diseño y tecnología para convertir
-              ideas en productos digitales.
-            </p>
-
-            <p>
-              Creemos en soluciones simples, eficientes
-              y escalables. Tecnología que no solo funciona,
-              sino que genera impacto.
-            </p>
-
+            <h2>Una idea puede ser<br />el comienzo de <Scramble as="span" className="accent" text="algo grande." /></h2>
+            <p>En InnovaX creamos tecnología para potenciar negocios y empresas. Combinamos desarrollo de software, diseño y pensamiento de producto para convertir ideas en experiencias digitales.</p>
+            <p>Creemos en soluciones simples, eficientes y escalables. Tecnología que no solo funciona, sino que tiene un propósito.</p>
+            <div className="about-signature">EMPOWERING IDEAS WITH TECHNOLOGY <span>✦</span></div>
           </div>
-
         </section>
 
-
-        {/* =====================================
-            EQUIPO
-        ====================================== */}
-
-        <section
-          id="equipo"
-          className="section team reveal"
-        >
-
-          <div className="section-heading">
-
-            <div className="section-label">
-              EQUIPO
+        <section id="equipo" className="section team reveal">
+          <div className="section-intro">
+            <div>
+              <div className="section-label">05 / EQUIPO</div>
+              <h2>Personas detrás<br />de <Scramble as="span" className="accent" text="InnovaX." /></h2>
             </div>
-
-            <h2>
-              Las personas detrás
-              <br />
-              de <span>InnovaX.</span>
-            </h2>
-
+            <p>Un equipo multidisciplinario que combina ingeniería, diseño y visión de producto.</p>
           </div>
 
           <div className="team-grid">
-
-            {/* MIEMBRO 1 */}
-            <article className="team-card reveal-card">
-
-              <div className="team-photo">
-                <img
-                  src="/team/member-1.jpg"
-                  alt="Nombre del integrante 1"
-                />
-              </div>
-
-              <div className="team-info">
-
-                <span className="team-role">
-                  FUNCIÓN / ROL
-                </span>
-
-                <h3>
-                  Nombre Apellido
-                </h3>
-
-                <p>
-                  Breve descripción del integrante del equipo.
-                </p>
-
-              </div>
-
-            </article>
-
-
-            {/* MIEMBRO 2 */}
-            <article className="team-card reveal-card">
-
-              <div className="team-photo">
-                <img
-                  src="/team/member-2.jpg"
-                  alt="Nombre del integrante 2"
-                />
-              </div>
-
-              <div className="team-info">
-
-                <span className="team-role">
-                  FUNCIÓN / ROL
-                </span>
-
-                <h3>
-                  Nombre Apellido
-                </h3>
-
-                <p>
-                  Breve descripción del integrante del equipo.
-                </p>
-
-              </div>
-
-            </article>
-
-
-            {/* MIEMBRO 3 */}
-            <article className="team-card reveal-card">
-
-              <div className="team-photo">
-                <img
-                  src="/team/member-3.jpg"
-                  alt="Nombre del integrante 3"
-                />
-              </div>
-
-              <div className="team-info">
-
-                <span className="team-role">
-                  FUNCIÓN / ROL
-                </span>
-
-                <h3>
-                  Nombre Apellido
-                </h3>
-
-                <p>
-                  Breve descripción del integrante del equipo.
-                </p>
-
-              </div>
-
-            </article>
-
-
-            {/* MIEMBRO 4 */}
-            <article className="team-card reveal-card">
-
-              <div className="team-photo">
-                <img
-                  src="/team/member-4.jpg"
-                  alt="Nombre del integrante 4"
-                />
-              </div>
-
-              <div className="team-info">
-
-                <span className="team-role">
-                  FUNCIÓN / ROL
-                </span>
-
-                <h3>
-                  Nombre Apellido
-                </h3>
-
-                <p>
-                  Breve descripción del integrante del equipo.
-                </p>
-
-              </div>
-
-            </article>
-
-          </div>
-
-        </section>
-
-
-        {/* =====================================
-            TECH STACK
-        ====================================== */}
-
-        <section
-          id="tech-stack"
-          className="section tech-stack reveal"
-        >
-
-          <div className="section-heading">
-
-            <div className="section-label">
-              TECNOLOGÍAS
-            </div>
-
-            <h2>
-              Nuestro
-              <br />
-              <span>Tech Stack.</span>
-            </h2>
-
-            <p>
-              Tecnologías que utilizamos para construir
-              soluciones modernas, robustas y escalables.
-            </p>
-
-          </div>
-
-          <div className="tech-list">
-
-            {technologies.map((technology) => (
-              <div
-                className="tech-item reveal-card"
-                key={technology}
-              >
-
-                <span>◆</span>
-
-                {technology}
-
-              </div>
+            {team.map((member, index) => (
+              <article className="team-card reveal-card" key={member.slug}>
+                <div className="team-photo">
+                  <img src={`/team/${member.slug}.png`} alt={member.name} />
+                  <span>0{index + 1}</span>
+                </div>
+                <div className="team-info">
+                  <a className="team-role" href={member.linkedin} target="_blank" rel="noreferrer">
+                    <IconLinkedIn className="team-role-icon" /> LinkedIn
+                  </a>
+                  <h3>{member.name}</h3>
+                  <p>Co-Founder y Full Stack Dev</p>
+                </div>
+              </article>
             ))}
-
           </div>
-
         </section>
 
+        <section id="contacto" className="contact reveal">
+          <div className="contact-grid-bg" />
+          <div className="contact-orb" />
+          <div className="contact-inner">
+            <div className="section-label">06 / HABLEMOS</div>
+            <h2>Tenés una idea.<br /><Scramble as="span" className="accent" text="Hagamos que pase." /></h2>
+            <p>Contanos qué querés construir y demos juntos el próximo paso.</p>
 
-        {/* =====================================
-            CONTACTO
-        ====================================== */}
-
-        <section
-          id="contacto"
-          className="contact reveal"
-        >
-
-          <div className="contact-background">
-            <img
-              src="/innovax-logo.png"
-              alt=""
-            />
-          </div>
-
-          <div className="section-label">
-            HABLEMOS
-          </div>
-
-          <h2>
-            ¿Tenés una idea?
-            <br />
-            <span>Hagámosla realidad.</span>
-          </h2>
-
-          <p>
-            Contanos qué querés construir y demos juntos
-            el próximo paso.
-          </p>
-
-
-          {/* FORMULARIO */}
-          <form
-            className="contact-form"
-            action="mailto:hola@innovax.com.ar"
-            method="POST"
-            encType="text/plain"
-          >
-
-            <div className="contact-form-row">
-
-              <div className="contact-field">
-                <label htmlFor="nombre">
-                  Nombre
-                </label>
-
-                <input
-                  id="nombre"
-                  name="Nombre"
-                  type="text"
-                  placeholder="Tu nombre"
-                  required
-                />
+            <form className="contact-form" action={`mailto:${CONTACT.email}`} method="POST" encType="text/plain">
+              <div className="contact-form-row">
+                <div className="contact-field">
+                  <label htmlFor="nombre">Nombre</label>
+                  <input id="nombre" name="Nombre" type="text" placeholder="Tu nombre" required />
+                </div>
+                <div className="contact-field">
+                  <label htmlFor="empresa">Empresa</label>
+                  <input id="empresa" name="Empresa" type="text" placeholder="Nombre de tu empresa" />
+                </div>
               </div>
-
-
               <div className="contact-field">
-                <label htmlFor="empresa">
-                  Empresa
-                </label>
-
-                <input
-                  id="empresa"
-                  name="Empresa"
-                  type="text"
-                  placeholder="Nombre de tu empresa"
-                />
+                <label htmlFor="email">Email</label>
+                <input id="email" name="Email" type="email" placeholder="tu@email.com" required />
               </div>
+              <div className="contact-field">
+                <label htmlFor="mensaje">Mensaje</label>
+                <textarea id="mensaje" name="Mensaje" rows="5" placeholder="Contanos sobre tu proyecto..." required />
+              </div>
+              <button type="submit" className="button primary contact-submit">Enviar mensaje <span>↗</span></button>
+            </form>
 
+            <div className="contact-buttons">
+              <a href={CONTACT.whatsappUrl} target="_blank" rel="noreferrer" className="button whatsapp-button">
+                <IconWhatsApp className="button-icon" /> WhatsApp
+              </a>
+              <a href={`mailto:${CONTACT.email}`} className="button secondary">
+                <IconMail className="button-icon" /> {CONTACT.email}
+              </a>
+              <a href={CONTACT.instagramUrl} target="_blank" rel="noreferrer" className="button secondary">
+                <IconInstagram className="button-icon" /> @{CONTACT.instagramHandle}
+              </a>
             </div>
-
-
-            <div className="contact-field">
-
-              <label htmlFor="email">
-                Email
-              </label>
-
-              <input
-                id="email"
-                name="Email"
-                type="email"
-                placeholder="tu@email.com"
-                required
-              />
-
-            </div>
-
-
-            <div className="contact-field">
-
-              <label htmlFor="mensaje">
-                Mensaje
-              </label>
-
-              <textarea
-                id="mensaje"
-                name="Mensaje"
-                rows="5"
-                placeholder="Contanos sobre tu proyecto..."
-                required
-              />
-
-            </div>
-
-
-            <button
-              type="submit"
-              className="button primary contact-submit"
-            >
-              Enviar mensaje
-              <span>↗</span>
-            </button>
-
-          </form>
-
-
-          {/* BOTONES ORIGINALES — NO SE TOCAN */}
-
-          <div className="contact-buttons">
-
-            <a
-              href="https://wa.me/5490000000000"
-              target="_blank"
-              rel="noreferrer"
-              className="button whatsapp-button"
-            >
-              WhatsApp
-              <span>↗</span>
-            </a>
-
-            <a
-              href="mailto:hola@innovax.com.ar"
-              className="button secondary"
-            >
-              hola@innovax.com.ar
-            </a>
-
           </div>
-
         </section>
-
       </main>
 
-
-      {/* =====================================
-          FOOTER
-      ====================================== */}
-
       <footer>
-
         <div className="footer-brand">
-
-          <img
-            src="/innovax-logo.png"
-            alt="InnovaX"
-          />
-
-          <strong>
-            InnovaX
-          </strong>
-
+          <img src="/innovax-logo.png" alt="InnovaX" />
+          <strong>InnovaX</strong>
         </div>
-
-        <p>
-          Empowering ideas with technology.
-        </p>
-
-        <span>
-          © 2026 InnovaX
-        </span>
-
+        <p>Empowering ideas with technology.</p>
+        <span>© 2026 InnovaX</span>
       </footer>
 
-
-      {/* =====================================
-          FLOATING ACTIONS
-      ====================================== */}
-
       <div className="floating-actions">
-
-        {/* INSTAGRAM */}
-
-        <a
-          className="floating-instagram"
-          href="https://instagram.com/innovax"
-          target="_blank"
-          rel="noreferrer"
-          aria-label="Instagram"
-        >
-
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-
-            <rect
-              x="3"
-              y="3"
-              width="18"
-              height="18"
-              rx="5"
-              stroke="currentColor"
-              strokeWidth="1.8"
-            />
-
-            <circle
-              cx="12"
-              cy="12"
-              r="4"
-              stroke="currentColor"
-              strokeWidth="1.8"
-            />
-
-            <circle
-              cx="17.5"
-              cy="6.5"
-              r="1"
-              fill="currentColor"
-            />
-
-          </svg>
-
+        <a className="floating-instagram" href={CONTACT.instagramUrl} target="_blank" rel="noreferrer" aria-label="Instagram">
+          <IconInstagram className="floating-icon" />
         </a>
-
-
-        {/* TELÉFONO */}
-
-        <a
-          className="floating-phone"
-          href="tel:+5490000000000"
-          aria-label="Llamar a InnovaX"
-        >
-
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-
-            <path
-              d="M6.6 3.5L9.2 3C9.7 2.9 10.2 3.2 10.4 3.7L11.6 6.6C11.8 7.1 11.7 7.6 11.3 8L9.7 9.6C10.5 11.3 11.8 12.7 13.5 13.5L15.1 11.9C15.5 11.5 16 11.4 16.5 11.6L19.4 12.8C19.9 13 20.2 13.5 20.1 14L19.6 16.6C19.5 17.2 19 17.6 18.4 17.6C10.9 17.6 4.4 11.1 4.4 3.6C4.4 3 4.8 2.5 5.4 2.4L6.6 3.5Z"
-              stroke="currentColor"
-              strokeWidth="1.7"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-
-          </svg>
-
+        <a className="floating-phone" href={CONTACT.phoneHref} aria-label="Llamar a InnovaX">
+          <IconPhone className="floating-icon" />
         </a>
-
-
-        {/* WHATSAPP */}
-
-        <a
-          className="floating-whatsapp"
-          href="https://wa.me/5490000000000"
-          target="_blank"
-          rel="noreferrer"
-          aria-label="WhatsApp"
-        >
-
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-
-            <path
-              d="M20.5 11.5C20.5 16.47 16.47 20.5 11.5 20.5C10.05 20.5 8.68 20.16 7.47 19.56L3.5 20.5L4.48 16.67C3.56 15.26 3 13.57 3 11.75C3 6.78 7.03 2.75 12 2.75C16.7 2.75 20.5 6.53 20.5 11.5Z"
-              stroke="currentColor"
-              strokeWidth="1.7"
-            />
-
-            <path
-              d="M8.4 8.3C8.65 7.75 8.9 7.72 9.2 7.72C9.43 7.72 9.67 7.73 9.87 7.74C10.1 7.75 10.25 7.83 10.39 8.16L10.93 9.46C11.04 9.72 11.03 9.94 10.86 10.16L10.32 10.82C10.17 11 10.16 11.17 10.29 11.39C10.59 11.9 11.06 12.58 11.7 13.12C12.45 13.76 13.1 14.05 13.36 14.17C13.62 14.29 13.77 14.27 13.92 14.1L14.54 13.37C14.7 13.19 14.87 13.16 15.1 13.27L16.38 13.88C16.64 14 16.81 14.06 16.84 14.27C16.87 14.48 16.87 15.49 16.45 15.82C16.03 16.15 15.37 16.32 14.91 16.3C14.45 16.28 13.84 16.13 13.12 15.81C12.4 15.49 11.52 15.06 10.61 14.2C9.7 13.34 8.95 12.29 8.61 11.7C8.27 11.11 7.78 10.22 7.78 9.35C7.78 8.48 8.14 7.77 8.4 8.3Z"
-              fill="currentColor"
-            />
-
-          </svg>
-
+        <a className="floating-whatsapp" href={CONTACT.whatsappUrl} target="_blank" rel="noreferrer" aria-label="WhatsApp">
+          <IconWhatsApp className="floating-icon" />
         </a>
-
       </div>
-
     </div>
   );
 }
