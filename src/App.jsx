@@ -12,6 +12,7 @@ const CONTACT = {
 const services = [
   { tag: "software.build()", title: "Desarrollo de software", description: "Soluciones a medida para optimizar procesos, resolver problemas y convertir ideas en productos reales.", status: "en producción" },
   { tag: "web.deploy()", title: "Desarrollo web", description: "Experiencias web rápidas, responsive y modernas, diseñadas para representar marcas y generar resultados.", status: "en producción" },
+  { tag: "shop.launch()", title: "E-commerce", description: "Tiendas online a medida, con pasarelas de pago, gestión de stock y checkout pensado para vender sin fricción.", status: "en producción" },
   { tag: "system.scale()", title: "Sistemas a medida", description: "Plataformas construidas alrededor de la forma real de trabajar de cada empresa.", status: "activo" },
   { tag: "api.connect()", title: "Integraciones & APIs", description: "Conectamos servicios y sistemas para eliminar tareas manuales y automatizar procesos.", status: "activo" },
 ];
@@ -61,12 +62,6 @@ const projects = [
   },
 ];
 
-const process = [
-  { number: "01", flag: "--innovate", title: "Innovation.", text: "Escuchamos el problema real antes de pensar en código. Ahí nace cada decisión técnica." },
-  { number: "02", flag: "--create", title: "Creation.", text: "Diseñamos y construimos el producto, iterando rápido y mostrando avances reales." },
-  { number: "03", flag: "--transform", title: "Transformation.", text: "Entregamos un sistema que cambia cómo tu negocio opera, no solo una app más." },
-];
-
 const differences = [
   ["--custom", "Desarrollo a medida", "Nada de soluciones genéricas. Construimos alrededor de tu problema."],
   ["--scalable", "Arquitectura escalable", "Pensamos el producto para hoy sin cerrarle la puerta al mañana."],
@@ -75,10 +70,10 @@ const differences = [
 ];
 
 const team = [
-  { slug: "elias-raimundo", name: "Elias Raimundo", linkedin: "https://linkedin.com/in/elias-raimundo" },
-  { slug: "mateo-calcagno", name: "Mateo Calcagno", linkedin: "https://linkedin.com/in/mateo-calcagno" },
   { slug: "pilar-orlando", name: "Pilar Orlando", linkedin: "https://linkedin.com/in/pilar-orlando" },
+  { slug: "mateo-calcagno", name: "Mateo Calcagno", linkedin: "https://linkedin.com/in/mateo-calcagno" },
   { slug: "milagros-delfino", name: "Milagros Delfino", linkedin: "https://linkedin.com/in/miladelfino" },
+  { slug: "elias-raimundo", name: "Elias Raimundo", linkedin: "https://linkedin.com/in/elias-raimundo" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -587,53 +582,49 @@ function App() {
           <div className="section-intro">
             <div>
               <div className="section-label">01 / CAPACIDADES</div>
-              <h2>Construimos lo que<br /><Scramble as="span" className="accent" text="todavía no existe." /></h2>
+              <h2><Scramble as="span" className="accent" text="Innovación" /><br />que impulsa.</h2>
             </div>
             <p>Desde una idea inicial hasta un sistema completo. Tecnología pensada para resolver, no para complicar.</p>
           </div>
 
-          <div className="services-window">
-            <div className="terminal-bar services-bar">
-              <span className="dot dot-red" />
-              <span className="dot dot-yellow" />
-              <span className="dot dot-green" />
-              <span className="terminal-title">innovax/services.js</span>
-            </div>
-            <div className="services-grid">
-              {services.map((service) => (
-                <article
-                  className="service-card reveal-card"
-                  key={service.tag}
-                  onMouseMove={handleCardTilt}
-                  onMouseLeave={resetCardTilt}
-                >
-                  <div className="service-top">
-                    <span className="service-tag">{service.tag}</span>
-                    <span className="service-status"><i /> {service.status}</span>
-                  </div>
-                  <div className="service-content">
-                    <h3>{service.title}</h3>
-                    <p>{service.description}</p>
-                    <a href="#contacto">Conocer más <span>↗</span></a>
-                  </div>
-                  <div className="card-corner" />
-                </article>
-              ))}
-            </div>
-          </div>
         </section>
+
+        <div className="services-marquee">
+          <span className="services-marquee-hint">auto-scroll · hover para pausar</span>
+          <div className="services-track">
+            {[...services, ...services].map((service, index) => (
+              <article
+                className="service-card"
+                key={`${service.tag}-${index}`}
+                onMouseMove={handleCardTilt}
+                onMouseLeave={resetCardTilt}
+              >
+                <div className="service-top">
+                  <span className="service-tag">{service.tag}</span>
+                  <span className="service-status"><i /> {service.status}</span>
+                </div>
+                <div className="service-content">
+                  <h3>{service.title}</h3>
+                  <p>{service.description}</p>
+                  <a href="#contacto">Conocer más <span>↗</span></a>
+                </div>
+                <div className="card-corner" />
+              </article>
+            ))}
+          </div>
+        </div>
 
         <section id="proyectos" className="section projects reveal">
           <div className="section-intro">
             <div>
               <div className="section-label">02 / SELECTED WORK</div>
-              <h2>Hecho para<br /><Scramble as="span" className="accent" text="funcionar." /></h2>
+              <h2><Scramble as="span" className="accent" text="Creación" /><br />con propósito.</h2>
             </div>
-            <p>Proyectos que combinan producto, ingeniería y diseño para transformar necesidades concretas en soluciones digitales. Arrastrá, scrolleá o pasá el mouse: cada card tiene el detalle atrás.</p>
+            <p>Proyectos que combinan producto, ingeniería y diseño para transformar necesidades concretas en soluciones digitales. Arrastrá, scrolleá o hacé click: la card elegida se agranda y gira para mostrar el detalle.</p>
           </div>
 
           <div
-            className="projects-track"
+            className={`projects-track ${flippedCards.size > 0 ? "has-active" : ""}`}
             ref={trackRef}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
@@ -642,7 +633,9 @@ function App() {
           >
             {projects.map((project, index) => (
               <article
-                className={`project-card project-${index + 1} reveal-card ${flippedCards.has(index) ? "is-flipped" : ""}`}
+                className={`project-card project-${index + 1} reveal-card ${flippedCards.has(index) ? "is-flipped" : ""} ${
+                  flippedCards.size > 0 && !flippedCards.has(index) ? "is-dimmed" : ""
+                }`}
                 key={project.number}
                 onClick={() => toggleFlip(index)}
               >
@@ -657,7 +650,7 @@ function App() {
                       <h3>{project.title}</h3>
                       <p>{project.description}</p>
                     </div>
-                    <span className="flip-hint">⟲ ver detalles</span>
+                    <span className="flip-hint">⟲ click para expandir</span>
                   </div>
 
                   <div className="card-face card-face-back">
@@ -705,42 +698,22 @@ function App() {
 
         <section className="manifesto reveal">
           <div className="manifesto-top">
-            <div className="section-label">PROCESO</div>
-            <p className="manifesto-kicker">La tecnología no es el destino. Es lo que usamos para llegar más lejos.</p>
+            <div className="section-label">03 / CÓMO TRABAJAMOS</div>
+            <h2><Scramble as="span" className="accent" text="Transformación" /><br />con impacto.</h2>
+            <p className="manifesto-kicker">La tecnología no es el destino. Es lo que usamos para llegar más lejos — y la forma en la que trabajamos es lo que nos diferencia.</p>
           </div>
 
-          <div className="process-list">
-            {process.map((step, index) => (
-              <button
-                type="button"
-                key={step.number}
-                className={`process-item ${activeProcess === index ? "active" : ""}`}
-                onMouseEnter={() => setActiveProcess(index)}
-                onFocus={() => setActiveProcess(index)}
-              >
-                <span className="process-title">{step.title}</span>
-                <span className="process-flag">{step.flag}</span>
-                <span className="process-text">{step.text}</span>
-              </button>
-            ))}
-          </div>
-        </section>
-
-        <section className="difference reveal">
-          <div className="difference-top">
-            <div className="section-label">03 / POR QUÉ INNOVAX</div>
-            <h2>Menos ruido.<br /><Scramble as="span" className="accent" text="Más producto." /></h2>
-          </div>
-          <div className="difference-grid">
-            {differences.map(([flag, title, text]) => (
-              <div className="difference-item" key={flag}>
-                <strong>{flag}</strong>
-                <div>
-                  <h3>{title}</h3>
+          <div className="difference-strip">
+            <span className="difference-strip-label">Por qué InnovaX</span>
+            <div className="difference-tags">
+              {differences.map(([flag, title, text]) => (
+                <div className="difference-tag" key={flag}>
+                  <strong>{flag}</strong>
+                  <h4>{title}</h4>
                   <p>{text}</p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
 
@@ -770,8 +743,9 @@ function App() {
             {team.map((member, index) => (
               <article className="team-card reveal-card" key={member.slug}>
                 <div className="team-photo">
-                  <img src={`/team/${member.slug}.png`} alt={member.name} />
-                  <span>0{index + 1}</span>
+                  <div className="team-photo-frame">
+                    <img src={`/team/${member.slug}.png`} alt={member.name} />
+                  </div>
                 </div>
                 <div className="team-info">
                   <a className="team-role" href={member.linkedin} target="_blank" rel="noreferrer">
