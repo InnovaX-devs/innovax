@@ -386,6 +386,7 @@ function App() {
   const [activeProcess, setActiveProcess] = useState(0);
   const [flippedCards, setFlippedCards] = useState(() => new Set());
   const [activeProject, setActiveProject] = useState(0);
+  const [formStatus, setFormStatus] = useState("idle");
 
   const trackRef = useRef(null);
   const isDragging = useRef(false);
@@ -475,6 +476,33 @@ function App() {
     if (!track) return;
     const cardWidth = track.scrollWidth / projects.length;
     track.scrollTo({ left: cardWidth * index, behavior: "smooth" });
+  };
+
+  const FORMSPREE_URL = "https://formspree.io/f/mljeevwb";
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+
+    setFormStatus("sending");
+
+    try {
+      const response = await fetch(FORMSPREE_URL, {
+        method: "POST",
+        body: data,
+        headers: { Accept: "application/json" },
+      });
+
+      if (response.ok) {
+        setFormStatus("success");
+        form.reset();
+      } else {
+        setFormStatus("error");
+      }
+    } catch (err) {
+      setFormStatus("error");
+    }
   };
 
   const handleCardTilt = (e) => {
@@ -728,26 +756,41 @@ function App() {
             <h2>Tenés una idea.<br /><Scramble as="span" className="accent" text="Hagamos que pase." /></h2>
             <p>Contanos qué querés construir y demos juntos el próximo paso.</p>
 
-            <form className="contact-form" action={`mailto:${CONTACT.email}`} method="POST" encType="text/plain">
+            <form className="contact-form" onSubmit={handleContactSubmit}>
               <div className="contact-form-row">
                 <div className="contact-field">
                   <label htmlFor="nombre">Nombre</label>
-                  <input id="nombre" name="Nombre" type="text" placeholder="Tu nombre" required />
+                  <input id="nombre" name="nombre" type="text" placeholder="Tu nombre" required disabled={formStatus === "sending"} />
                 </div>
                 <div className="contact-field">
                   <label htmlFor="empresa">Empresa</label>
-                  <input id="empresa" name="Empresa" type="text" placeholder="Nombre de tu empresa" />
+                  <input id="empresa" name="empresa" type="text" placeholder="Nombre de tu empresa" disabled={formStatus === "sending"} />
                 </div>
               </div>
               <div className="contact-field">
                 <label htmlFor="email">Email</label>
-                <input id="email" name="Email" type="email" placeholder="tu@email.com" required />
+                <input id="email" name="email" type="email" placeholder="tu@email.com" required disabled={formStatus === "sending"} />
               </div>
               <div className="contact-field">
                 <label htmlFor="mensaje">Mensaje</label>
-                <textarea id="mensaje" name="Mensaje" rows="5" placeholder="Contanos sobre tu proyecto..." required />
+                <textarea id="mensaje" name="mensaje" rows="5" placeholder="Contanos sobre tu proyecto..." required disabled={formStatus === "sending"} />
               </div>
-              <button type="submit" className="button primary contact-submit">Enviar mensaje <span>↗</span></button>
+              <input type="hidden" name="_subject" value="Nuevo contacto desde innovax.com" />
+
+              <button type="submit" className="button primary contact-submit" disabled={formStatus === "sending"}>
+                {formStatus === "sending" ? "Enviando..." : <>Enviar mensaje <span>↗</span></>}
+              </button>
+
+              {formStatus === "success" && (
+                <p className="form-feedback form-feedback-success">
+                  ✓ Mensaje enviado. Te vamos a responder a la brevedad.
+                </p>
+              )}
+              {formStatus === "error" && (
+                <p className="form-feedback form-feedback-error">
+                  ✕ Hubo un problema al enviar. Probá de nuevo o escribinos directo a {CONTACT.email}.
+                </p>
+              )}
             </form>
 
             <div className="contact-buttons">
