@@ -185,7 +185,10 @@ body.cursor-hover .cursor-ring { width: 54px; height: 54px; margin: -27px; borde
 
 .section { max-width:var(--max); margin:auto; padding:145px 35px; }
 .section-intro { display:grid; grid-template-columns:1.25fr .75fr; gap:60px; align-items:end; margin-bottom:65px; }
-.section-intro h2, .manifesto-top h2, .about h2, .contact h2 {
+.section-intro h2, .manifesto-top h2 {
+  margin:17px 0 0; font-size:clamp(38px,5vw,64px); line-height:.95; letter-spacing:-.025em; font-weight:600;
+}
+.about h2, .contact h2 {
   margin:17px 0 0; font-size:clamp(42px,5.6vw,72px); line-height:.95; letter-spacing:-.025em; font-weight:600;
 }
 .section-intro > p { max-width:430px; margin:0 0 3px auto; color:var(--muted); font-size:14px; line-height:1.8; }
@@ -281,15 +284,18 @@ body.cursor-hover .cursor-ring { width: 54px; height: 54px; margin: -27px; borde
   filter: saturate(.6) brightness(.85);
 }
 .card-flip-inner {
-  position:relative; width:100%; height:100%; min-height:460px;
+  position:relative; width:100%; min-height:460px;
+  display: grid;
   transition: transform .7s cubic-bezier(.16,1,.3,1);
   transform-style: preserve-3d;
 }
 .project-card.is-flipped .card-flip-inner { transform: rotateY(180deg); }
 
 .card-face {
-  position:absolute; inset:0; display:flex; flex-direction:column; justify-content:space-between;
-  padding:27px; overflow:auto; border:1px solid var(--line); background:#08080d;
+  grid-column: 1; grid-row: 1;
+  display:flex; flex-direction:column; justify-content:space-between;
+  min-height: 460px;
+  padding:27px; overflow:visible; border:1px solid var(--line); background:#08080d;
   backface-visibility:hidden; -webkit-backface-visibility:hidden;
   transition: border-color .4s, box-shadow .4s;
 }
@@ -545,6 +551,7 @@ footer { min-height:100px; padding:25px 5vw; display:flex; align-items:center; j
     box-shadow: 0 10px 35px rgba(10,102,194,.25);
   }
 .floating-whatsapp { background:#20d466; color:#061108 !important; box-shadow:0 10px 35px rgba(32,212,102,.25); animation:pulse 3s infinite; }
+.floating-whatsapp .floating-icon { color:#fff; }
 @keyframes pulse { 85% { box-shadow:0 10px 35px rgba(32,212,102,.25),0 0 0 10px rgba(32,212,102,.06); } }
 
 .hero-animation { animation:appear 1s cubic-bezier(.16,1,.3,1) both; }

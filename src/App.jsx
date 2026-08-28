@@ -111,11 +111,8 @@ function IconWhatsApp(props) {
 
 function IconLinkedIn(props) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" {...props}>
-      <rect x="2" y="2" width="20" height="20" rx="4.5" fill="currentColor" />
-      <rect x="6.3" y="9.6" width="2.7" height="8.6" fill="var(--bg)" />
-      <circle cx="7.65" cy="6.1" r="1.55" fill="var(--bg)" />
-      <path d="M11.6 9.6h2.7v1.25c.55-.85 1.5-1.45 2.85-1.45 2.45 0 3.35 1.6 3.35 4v4.8h-2.7v-4.25c0-1.05-.4-1.8-1.4-1.8-1.1 0-1.65.75-1.65 1.8v4.25h-2.7V9.6Z" fill="var(--bg)" />
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M6.94 8.5H3.56V20h3.38V8.5ZM5.25 7.06a1.96 1.96 0 1 0 0-3.92 1.96 1.96 0 0 0 0 3.92ZM20.5 20h-3.38v-5.6c0-1.34-.02-3.06-1.87-3.06-1.87 0-2.16 1.46-2.16 2.96V20H9.7V8.5h3.24v1.57h.05c.45-.86 1.56-1.77 3.21-1.77 3.44 0 4.3 2.26 4.3 5.2V20Z" />
     </svg>
   );
 }
@@ -554,10 +551,10 @@ function App() {
         </nav>
 
         <Magnetic>
-          <a href="#contacto" className="nav-button" onClick={closeMenu}>
-            Hablemos <span>↗</span>
-          </a>
-        </Magnetic>
+        <a href="#contacto" className="nav-button" onClick={closeMenu}>
+          Hablemos <span>↗</span>
+        </a>
+      </Magnetic>
       </header>
 
       <main>
@@ -612,7 +609,7 @@ function App() {
         <section id="servicios" className="section services reveal">
           <div className="section-intro">
             <div>
-              <div className="section-label">01 / CAPABILITIES</div>
+              <div className="section-label">01 / SKILLS</div>
               <h2><Scramble as="span" className="accent-cyan" text="Innovación" /><br />que impulsa.</h2>
             </div>
             <p>Desde una idea inicial hasta un sistema completo. Tecnología pensada para resolver, no para complicar.</p>
@@ -731,8 +728,7 @@ function App() {
           <div className="manifesto-top">
             <div className="section-label">03 / HOW WE WORK</div>
             <h2><Scramble as="span" className="accent-transform" text="Transformación" /><br />con impacto.</h2>
-            <p>En InnovaX creamos tecnología para potenciar negocios y empresas. Combinamos desarrollo de software, diseño y pensamiento de producto para convertir ideas en experiencias digitales.</p>
-            <p>Creemos en soluciones simples, eficientes y escalables. Tecnología que no solo funciona, sino que tiene un propósito.</p>
+             <p>En InnovaX convertimos ideas en software que funciona. Desarrollo, diseño y producto, en un mismo equipo.</p>
           </div>
           <div className="difference-strip">
             <span className="difference-strip-label">Por qué InnovaX</span>
