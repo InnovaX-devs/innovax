@@ -20,31 +20,35 @@ const services = [
 const projects = [
   {
     number: "01",
-    category: "SOFTWARE",
-    title: "Business Platform",
-    description: "Sistema empresarial para centralizar operaciones y mejorar la gestión.",
-    technologies: "Java · Spring Boot · React",
-    diff: "+1,204 −86",
-    branch: "main",
+    category: "Full-Stack / ERP",
+    technologies: "Next.js 16 · TypeScript · Tailwind CSS · Prisma · PostgreSQL · NextAuth v5 · Vercel Blob",
+    title: "KJ Importados — ERP a medida",
+    description:
+      "Sistema de gestión a medida para un negocio real de venta de perfumes: productos y fraccionamiento en decants, ventas, compras, presupuestos, finanzas y dashboard en un solo lugar.",
     highlights: [
-      "Reducción del 40% en tiempo de gestión administrativa",
-      "Roles y permisos granulares por área",
-      "Reportes y dashboards en tiempo real",
+      "Precios con fórmula configurable u override manual, con historial de auditoría",
+      "Costeo promedio ponderado en compras a proveedores",
+      "Estados de pago y banderas logísticas independientes por pedido (armado, enviado, retirado, impreso)",
+      "Caja unificada generada automáticamente por eventos de negocio, sin carga manual",
     ],
+    branch: "feat/kj-perfumes-erp",
+    diff: "+1240 -180",
   },
   {
     number: "02",
-    category: "WEB APP",
-    title: "Digital Experience",
-    description: "Aplicación web enfocada en experiencia, rendimiento y escalabilidad.",
-    technologies: "React · JavaScript · REST APIs",
-    diff: "+842 −31",
-    branch: "main",
+    category: "Desktop / Gestión",
+    technologies: "React · TypeScript · Tailwind CSS · Python · Flask · SQLite · Tauri",
+    title: "MANAPASEGUR S.A.S.",
+    description:
+      "Sistema de escritorio para una empresa de seguridad privada: gestión de empleados, puestos y turnos, con generación automática de cronogramas mensuales y envío por email en PDF.",
     highlights: [
-      "Lighthouse 95+ en performance",
-      "Diseño responsive mobile-first",
-      "SEO técnico optimizado desde el build",
+      "Generación automática de cronogramas mensuales a partir de puestos y turnos",
+      "Envío automático de cronogramas por email en formato PDF",
+      "Backend en Python + Flask con persistencia en SQLite",
+      "Empaquetado como app de escritorio para Windows con Tauri",
     ],
+    branch: "feat/manapasegur-desktop",
+    diff: "+890 -60",
   },
   {
     number: "03",
@@ -700,9 +704,9 @@ function App() {
           <div className="manifesto-top">
             <div className="section-label">03 / CÓMO TRABAJAMOS</div>
             <h2><Scramble as="span" className="accent" text="Transformación" /><br />con impacto.</h2>
-            <p className="manifesto-kicker">La tecnología no es el destino. Es lo que usamos para llegar más lejos — y la forma en la que trabajamos es lo que nos diferencia.</p>
+            <p>En InnovaX creamos tecnología para potenciar negocios y empresas. Combinamos desarrollo de software, diseño y pensamiento de producto para convertir ideas en experiencias digitales.</p>
+            <p>Creemos en soluciones simples, eficientes y escalables. Tecnología que no solo funciona, sino que tiene un propósito.</p>
           </div>
-
           <div className="difference-strip">
             <span className="difference-strip-label">Por qué InnovaX</span>
             <div className="difference-tags">
@@ -717,53 +721,11 @@ function App() {
           </div>
         </section>
 
-        <section id="nosotros" className="section about reveal">
-          <div className="about-label">
-            <div className="section-label">04 / NOSOTROS</div>
-            <div className="about-index">INNOVA<br />X</div>
-          </div>
-          <div className="about-content">
-            <h2>Una idea puede ser<br />el comienzo de <Scramble as="span" className="accent" text="algo grande." /></h2>
-            <p>En InnovaX creamos tecnología para potenciar negocios y empresas. Combinamos desarrollo de software, diseño y pensamiento de producto para convertir ideas en experiencias digitales.</p>
-            <p>Creemos en soluciones simples, eficientes y escalables. Tecnología que no solo funciona, sino que tiene un propósito.</p>
-            <div className="about-signature">EMPOWERING IDEAS WITH TECHNOLOGY <span>✦</span></div>
-          </div>
-        </section>
-
-        <section id="equipo" className="section team reveal">
-          <div className="section-intro">
-            <div>
-              <div className="section-label">05 / EQUIPO</div>
-              <h2>Personas detrás<br />de <Scramble as="span" className="accent" text="InnovaX." /></h2>
-            </div>
-            <p>Un equipo multidisciplinario que combina ingeniería, diseño y visión de producto.</p>
-          </div>
-
-          <div className="team-grid">
-            {team.map((member, index) => (
-              <article className="team-card reveal-card" key={member.slug}>
-                <div className="team-photo">
-                  <div className="team-photo-frame">
-                    <img src={`/team/${member.slug}.png`} alt={member.name} />
-                  </div>
-                </div>
-                <div className="team-info">
-                  <a className="team-role" href={member.linkedin} target="_blank" rel="noreferrer">
-                    <IconLinkedIn className="team-role-icon" /> LinkedIn
-                  </a>
-                  <h3>{member.name}</h3>
-                  <p>Co-Founder y Full Stack Dev</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
         <section id="contacto" className="contact reveal">
           <div className="contact-grid-bg" />
           <div className="contact-orb" />
           <div className="contact-inner">
-            <div className="section-label">06 / HABLEMOS</div>
+            <div className="section-label">04 / HABLEMOS</div>
             <h2>Tenés una idea.<br /><Scramble as="span" className="accent" text="Hagamos que pase." /></h2>
             <p>Contanos qué querés construir y demos juntos el próximo paso.</p>
 
@@ -802,6 +764,35 @@ function App() {
             </div>
           </div>
         </section>
+
+        <section id="equipo" className="section team reveal">
+          <div className="section-intro">
+            <div>
+              <div className="section-label">05 / EQUIPO</div>
+              <h2>Personas detrás<br />de <Scramble as="span" className="accent" text="InnovaX." /></h2>
+            </div>
+            <p>Un equipo multidisciplinario que combina ingeniería, diseño y visión de producto.</p>
+          </div>
+
+          <div className="team-grid">
+            {team.map((member, index) => (
+              <article className="team-card reveal-card" key={member.slug}>
+                <div className="team-photo">
+                  <div className="team-photo-frame">
+                    <img src={`/team/${member.slug}.png`} alt={member.name} />
+                  </div>
+                </div>
+                <div className="team-info">
+                  <a className="team-role" href={member.linkedin} target="_blank" rel="noreferrer">
+                    <IconLinkedIn className="team-role-icon" /> LinkedIn
+                  </a>
+                  <h3>{member.name}</h3>
+                  <p>Co-Founder y Full Stack Dev</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
       </main>
 
       <footer>
@@ -814,14 +805,20 @@ function App() {
       </footer>
 
       <div className="floating-actions">
+        <a className="floating-whatsapp" href={CONTACT.whatsappUrl} target="_blank" rel="noreferrer" aria-label="WhatsApp">
+          <IconWhatsApp className="floating-icon" />
+        </a>
         <a className="floating-instagram" href={CONTACT.instagramUrl} target="_blank" rel="noreferrer" aria-label="Instagram">
           <IconInstagram className="floating-icon" />
         </a>
-        <a className="floating-phone" href={CONTACT.phoneHref} aria-label="Llamar a InnovaX">
-          <IconPhone className="floating-icon" />
-        </a>
-        <a className="floating-whatsapp" href={CONTACT.whatsappUrl} target="_blank" rel="noreferrer" aria-label="WhatsApp">
-          <IconWhatsApp className="floating-icon" />
+        <a
+          className="floating-linkedin"
+          href="https://www.linkedin.com/company/innovax-team"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="LinkedIn"
+        >
+          <IconLinkedIn className="floating-icon" />
         </a>
       </div>
     </div>
