@@ -521,7 +521,6 @@ function App() {
         <nav>
           <a href="#servicios" onClick={closeMenu}>Servicios</a>
           <a href="#proyectos" onClick={closeMenu}>Proyectos</a>
-          <a href="#nosotros" onClick={closeMenu}>Nosotros</a>
           <a href="#equipo" onClick={closeMenu}>Equipo</a>
           <a href="#contacto" onClick={closeMenu}>Contacto</a>
         </nav>
@@ -585,8 +584,8 @@ function App() {
         <section id="servicios" className="section services reveal">
           <div className="section-intro">
             <div>
-              <div className="section-label">01 / CAPACIDADES</div>
-              <h2><Scramble as="span" className="accent" text="Innovación" /><br />que impulsa.</h2>
+              <div className="section-label">01 / CAPABILITIES</div>
+              <h2><Scramble as="span" className="accent-cyan" text="Innovación" /><br />que impulsa.</h2>
             </div>
             <p>Desde una idea inicial hasta un sistema completo. Tecnología pensada para resolver, no para complicar.</p>
           </div>
@@ -622,7 +621,7 @@ function App() {
           <div className="section-intro">
             <div>
               <div className="section-label">02 / SELECTED WORK</div>
-              <h2><Scramble as="span" className="accent" text="Creación" /><br />con propósito.</h2>
+              <h2><Scramble as="span" className="accent-violet" text="Creación" /><br />con propósito.</h2>
             </div>
             <p>Proyectos que combinan producto, ingeniería y diseño para transformar necesidades concretas en soluciones digitales. Arrastrá, scrolleá o hacé click: la card elegida se agranda y gira para mostrar el detalle.</p>
           </div>
@@ -702,8 +701,8 @@ function App() {
 
         <section className="manifesto reveal">
           <div className="manifesto-top">
-            <div className="section-label">03 / CÓMO TRABAJAMOS</div>
-            <h2><Scramble as="span" className="accent" text="Transformación" /><br />con impacto.</h2>
+            <div className="section-label">03 / HOW WE WORK</div>
+            <h2><Scramble as="span" className="accent-transform" text="Transformación" /><br />con impacto.</h2>
             <p>En InnovaX creamos tecnología para potenciar negocios y empresas. Combinamos desarrollo de software, diseño y pensamiento de producto para convertir ideas en experiencias digitales.</p>
             <p>Creemos en soluciones simples, eficientes y escalables. Tecnología que no solo funciona, sino que tiene un propósito.</p>
           </div>
@@ -725,7 +724,7 @@ function App() {
           <div className="contact-grid-bg" />
           <div className="contact-orb" />
           <div className="contact-inner">
-            <div className="section-label">04 / HABLEMOS</div>
+            <div className="section-label">04 / LET'S TALK</div>
             <h2>Tenés una idea.<br /><Scramble as="span" className="accent" text="Hagamos que pase." /></h2>
             <p>Contanos qué querés construir y demos juntos el próximo paso.</p>
 
@@ -768,7 +767,7 @@ function App() {
         <section id="equipo" className="section team reveal">
           <div className="section-intro">
             <div>
-              <div className="section-label">05 / EQUIPO</div>
+              <div className="section-label">05 / TEAM</div>
               <h2>Personas detrás<br />de <Scramble as="span" className="accent" text="InnovaX." /></h2>
             </div>
             <p>Un equipo multidisciplinario que combina ingeniería, diseño y visión de producto.</p>
