@@ -21,39 +21,26 @@ const projects = [
   {
     number: "01",
     category: "Full-Stack / ERP",
-    technologies: "Next.js 16 · TypeScript · Tailwind CSS · Prisma · PostgreSQL · NextAuth v5 · Vercel Blob",
     title: "KJ Importados — ERP a medida",
+    preview: "/projects/01-kj-erp.mp4",
     description:
       "Sistema de gestión a medida para un negocio real de venta de perfumes: productos y fraccionamiento en decants, ventas, compras, presupuestos, finanzas y dashboard en un solo lugar.",
-    highlights: [
-      "Precios con fórmula configurable u override manual, con historial de auditoría",
-      "Costeo promedio ponderado en compras a proveedores",
-      "Estados de pago y banderas logísticas independientes por pedido (armado, enviado, retirado, impreso)",
-      "Caja unificada generada automáticamente por eventos de negocio, sin carga manual",
-    ],
     branch: "feat/kj-perfumes-erp",
-    diff: "+1240 -180",
   },
   {
     number: "02",
     category: "Desktop / Gestión",
-    technologies: "React · TypeScript · Tailwind CSS · Python · Flask · SQLite · Tauri",
     title: "MANAPASEGUR S.A.S.",
+    preview: "/projects/02-manapasegur.mp4",
     description:
       "Sistema de escritorio para una empresa de seguridad privada: gestión de empleados, puestos y turnos, con generación automática de cronogramas mensuales y envío por email en PDF.",
-    highlights: [
-      "Generación automática de cronogramas mensuales a partir de puestos y turnos",
-      "Envío automático de cronogramas por email en formato PDF",
-      "Backend en Python + Flask con persistencia en SQLite",
-      "Empaquetado como app de escritorio para Windows con Tauri",
-    ],
     branch: "feat/manapasegur-desktop",
-    diff: "+890 -60",
   },
   {
     number: "03",
     category: "MICROSERVICES",
     title: "Scalable System",
+    preview: "/projects/03-scalable-system.mp4",
     description: "Arquitectura distribuida preparada para crecer junto al negocio.",
     technologies: "Spring Boot · Kafka · Docker",
     diff: "+2,015 −214",
@@ -384,6 +371,7 @@ function App() {
   const [flippedCards, setFlippedCards] = useState(() => new Set());
   const [activeProject, setActiveProject] = useState(0);
   const [formStatus, setFormStatus] = useState("idle");
+  const [lightboxSrc, setLightboxSrc] = useState(null);
 
   const trackRef = useRef(null);
   const isDragging = useRef(false);
@@ -433,6 +421,18 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = lightboxSrc !== null ? "hidden" : "";
+    const onKey = (e) => {
+      if (e.key === "Escape" && lightboxSrc) closeLightbox();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [lightboxSrc]);
+
   const closeMenu = () => setMenuOpen(false);
 
   const toggleFlip = (index) => {
@@ -447,6 +447,12 @@ function App() {
       return next;
     });
   };
+
+  const openLightbox = (e, src) => {
+    e.stopPropagation(); 
+    setLightboxSrc(src);
+  };
+  const closeLightbox = () => setLightboxSrc(null);
 
   const handlePointerDown = (e) => {
     if (e.pointerType !== "mouse" || !trackRef.current) return;
@@ -579,8 +585,7 @@ function App() {
             </h1>
 
             <p className="hero-description hero-animation">
-              Diseñamos y desarrollamos productos digitales, aplicaciones web
-              y sistemas a medida para empresas que quieren avanzar.
+              Creamos sistemas a medida que potencian empresas, impulsan negocios y convierten grandes ideas en productos.
             </p>
 
             <div className="hero-buttons hero-animation">
@@ -648,7 +653,7 @@ function App() {
               <div className="section-label">02 / SELECTED WORK</div>
               <h2><Scramble as="span" className="accent-violet" text="Creación" /><br />con propósito.</h2>
             </div>
-            <p>Proyectos que combinan producto, ingeniería y diseño para transformar necesidades concretas en soluciones digitales. Arrastrá, scrolleá o hacé click: la card elegida se agranda y gira para mostrar el detalle.</p>
+            <p>Proyectos que combinan producto, ingeniería y diseño para transformar necesidades concretas en soluciones digitales. Arrastrá, scrolleá o hacé click: la card elegida gira en su lugar para mostrar el detalle.</p>
           </div>
 
           <div
@@ -673,12 +678,21 @@ function App() {
                       <span>{project.number}</span>
                       <span>{project.category}</span>
                     </div>
-                    <div className="project-content">
-                      <small>{project.technologies}</small>
-                      <h3>{project.title}</h3>
-                      <p>{project.description}</p>
+                    <div className="project-media">
+                      <video
+                        src={project.preview}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        onClick={(e) => openLightbox(e, project.preview)}
+                        aria-label={`Demo de ${project.title}`}
+                      />
                     </div>
-                    <span className="flip-hint">⟲ click para expandir</span>
+                    <div className="project-content">
+                      <h3>{project.title}</h3>
+                    </div>
+                    <span className="flip-hint">+ Ver Más</span>
                   </div>
 
                   <div className="card-face card-face-back">
@@ -688,17 +702,11 @@ function App() {
                     </div>
                     <div className="project-content">
                       <h3>{project.title}</h3>
+                      <p className="project-description">{project.description}</p>
                       <ul className="project-highlights">
-                        {project.highlights.map((point) => (
-                          <li key={point}>{point}</li>
-                        ))}
                       </ul>
                       <div className="project-gitline">
                         <span className="git-branch">⎇ {project.branch}</span>
-                        <span className="git-diff">
-                          <em className="add">{project.diff.split(" ")[0]}</em>
-                          <em className="rem">{project.diff.split(" ")[1]}</em>
-                        </span>
                       </div>
                       <a href="#contacto">Hablemos de esto <span>↗</span></a>
                     </div>
@@ -723,6 +731,13 @@ function App() {
             </div>
           </div>
         </section>
+
+        {lightboxSrc && (
+          <div className="video-lightbox" onClick={closeLightbox}>
+            <button className="close-lightbox" onClick={closeLightbox} aria-label="Cerrar video">✕</button>
+            <video src={lightboxSrc} controls autoPlay loop onClick={(e) => e.stopPropagation()} />
+          </div>
+        )}
 
         <section className="manifesto reveal">
           <div className="manifesto-top">
