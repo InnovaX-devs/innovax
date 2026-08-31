@@ -29,27 +29,21 @@ const projects = [
   },
   {
     number: "02",
+    category: "Full-Stack / Gestión",
+    title: "Sistema de Gestión para Bodegas",
+    preview: "/projects/03-gestion-bodegas.mp4",
+    description:
+      "Sistema de gestión para bodegas que permite administrar productos, ventas, clientes y configuración del negocio mediante una interfaz web moderna y segura.",
+    branch: "feat/gestion-bodegas",
+  },
+  {
+    number: "03",
     category: "Desktop / Gestión",
     title: "MANAPASEGUR S.A.S.",
     preview: "/projects/02-manapasegur.mp4",
     description:
       "Sistema de escritorio para una empresa de seguridad privada: gestión de empleados, puestos y turnos, con generación automática de cronogramas mensuales y envío por email en PDF.",
     branch: "feat/manapasegur-desktop",
-  },
-  {
-    number: "03",
-    category: "MICROSERVICES",
-    title: "Scalable System",
-    preview: "/projects/03-scalable-system.mp4",
-    description: "Arquitectura distribuida preparada para crecer junto al negocio.",
-    technologies: "Spring Boot · Kafka · Docker",
-    diff: "+2,015 −214",
-    branch: "main",
-    highlights: [
-      "Procesamiento de eventos en tiempo real",
-      "Despliegue automatizado con Docker + CI/CD",
-      "Escalado horizontal sin downtime",
-    ],
   },
 ];
 
