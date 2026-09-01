@@ -406,7 +406,7 @@ body.cursor-hover .cursor-ring { width: 54px; height: 54px; margin: -27px; borde
 /* --- Process + "why us": one unified section now. The triptych stays the
    signature moment; the differentiators sit underneath as a quiet,
    compact spec-strip rather than a second full section competing with it. */
-.manifesto { position:relative; max-width:var(--max); margin:auto; padding:150px 35px 140px; overflow:hidden; }
+.manifesto { position:relative; max-width:var(--max); margin:auto; padding:115px 35px 140px; overflow:hidden; }
 .manifesto-top { text-align:center; margin-bottom: 60px; }
 .manifesto-kicker {
   margin: 16px auto 0; max-width: 560px; color: #a9a9b4; font-size: 15px; line-height: 1.7;
@@ -672,7 +672,7 @@ body.cursor-hover .cursor-ring { width: 54px; height: 54px; margin: -27px; borde
   .services-track { gap: 22px; padding: 0 22px; }
   .project-card, .card-flip-inner { min-height:400px; }
   .project-card.is-flipped, .project-card.is-flipped:hover { transform: translateY(-10px); }
-  .manifesto { padding:100px 25px 90px; }
+  .manifesto { padding:75px 25px 90px; }
   .difference-strip { margin-top: 55px; }
   .difference-tags { grid-template-columns:1fr; }
   .contact {
