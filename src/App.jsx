@@ -842,13 +842,46 @@ function App() {
         </section>
       </main>
 
-      <footer>
-        <div className="footer-brand">
-          <img src="/innovax-logo.png" alt="InnovaX" />
-          <strong>InnovaX</strong>
+      <footer className="site-footer" id="footer">
+        <div className="footer-top">
+          <div className="footer-brand">
+            <img src="/innovax-logo.png" alt="InnovaX" />
+            <div>
+              <strong>InnovaX</strong>
+              <p>Empowering ideas with technology.</p>
+            </div>
+          </div>
+
+          <nav className="footer-nav">
+            <span className="footer-heading">Navegación</span>
+            <a href="#inicio">Inicio</a>
+            <a href="#servicios">Servicios</a>
+            <a href="#proyectos">Proyectos</a>
+            <a href="#equipo">Equipo</a>
+            <a href="#contacto">Contacto</a>
+          </nav>
+
+          <div className="footer-contact">
+            <span className="footer-heading">Contacto</span>
+            <a href={`mailto:${CONTACT.email}`}>
+              <IconMail className="footer-icon" /> {CONTACT.email}
+            </a>
+            <a href={CONTACT.whatsappUrl} target="_blank" rel="noreferrer">
+              <IconWhatsApp className="footer-icon" /> WhatsApp
+            </a>
+            <a href={CONTACT.instagramUrl} target="_blank" rel="noreferrer">
+              <IconInstagram className="footer-icon" /> @{CONTACT.instagramHandle}
+            </a>
+            <a href="https://www.linkedin.com/company/innovax-team" target="_blank" rel="noreferrer">
+              <IconLinkedIn className="footer-icon" /> LinkedIn
+            </a>
+          </div>
         </div>
-        <p>Empowering ideas with technology.</p>
-        <span>© 2026 InnovaX</span>
+
+        <div className="footer-bottom">
+          <span>© {new Date().getFullYear()} InnovaX. Todos los derechos reservados.</span>
+          <a href="#inicio" className="footer-top-btn">Volver arriba ↑</a>
+        </div>
       </footer>
 
       <div className="floating-actions">
