@@ -5,7 +5,7 @@ const CONTACT = {
   instagramHandle: "innovax.team",
   instagramUrl: "https://instagram.com/innovax.team",
   email: "innovax.devs@gmail.com",
-  whatsappUrl: "https://wa.me/5490000000000",
+  whatsappUrl: "https://wa.me/5493584257936",
   phoneHref: "tel:+5490000000000",
 };
 
