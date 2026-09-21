@@ -221,7 +221,7 @@ body.cursor-hover .cursor-ring { width: 54px; height: 54px; margin: -27px; borde
 }
 .services-track {
   display: flex; width: max-content; gap: 40px; padding: 0 40px;
-  animation: services-scroll 52s linear infinite;
+  animation: services-scroll 60s linear infinite;
 }
 .services-marquee:hover .services-track { animation-play-state: paused; }
 @keyframes services-scroll {
@@ -251,6 +251,111 @@ body.cursor-hover .cursor-ring { width: 54px; height: 54px; margin: -27px; borde
 .service-card a span { color:var(--cyan); margin-left:7px; }
 .card-corner { position:absolute; width:100px; height:100px; right:-55px; top:-55px; border-radius:50%; background:radial-gradient(circle,rgba(0,217,255,.18),transparent 68%); opacity:0; transition:.5s; pointer-events: none; }
 .service-card:hover .card-corner { opacity:1; transform:scale(1.8); }
+
+/* --- Card destacada: Gestionax ----------------------------------------
+   Base oscura de InnovaX. Blanco para el contenido (título, texto,
+   chips, botón) y verde de Gestionax solo como acento. "by InnovaX"
+   lleva el degradé celeste → lila de la marca InnovaX. */
+.service-card-featured {
+  --gx: #22c55e;
+  --gx-2: #34d399;
+}
+.service-card-featured,
+.service-card-featured:hover {
+  border-color: rgba(255, 255, 255, .22);
+  background: linear-gradient(145deg, rgba(255, 255, 255, .06), rgba(34, 197, 94, .05) 70%, #0a0a10);
+}
+.service-card-featured {
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, .10), 0 20px 50px rgba(34, 197, 94, .08);
+}
+.service-card-featured:hover {
+  border-color: rgba(34, 197, 94, .6);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, .45), 0 0 0 1px rgba(34, 197, 94, .2), 0 20px 60px rgba(34, 197, 94, .14);
+}
+.service-card-featured .card-corner {
+  background: radial-gradient(circle, rgba(34, 197, 94, .2), transparent 68%);
+}
+.service-card-featured .service-tag { color: var(--gx); }
+.service-card-featured h3 { color: #fff; }
+.service-by {
+  font-weight: 600;
+  background: linear-gradient(100deg, var(--cyan), var(--violet));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  white-space: nowrap;
+}
+.service-card-featured p { color: #c9c9d3; }
+.service-status.is-new { color: var(--gx); }
+.service-status.is-new i {
+  background: var(--gx);
+  box-shadow: 0 0 8px rgba(34, 197, 94, .7);
+}
+
+.service-modules {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.service-modules li {
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .03);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #b9b9c4;
+}
+.service-card-featured .service-modules li {
+  border-color: rgba(255, 255, 255, .2);
+  background: rgba(255, 255, 255, .07);
+  color: #f4f4f6;
+}
+
+/* Botón "Ver planes": blanco (como los botones principales de InnovaX)
+   con la flecha en verde. Distinto al link "Conocer más". */
+.service-card .service-cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
+  color: #050507;
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(255, 255, 255, .10);
+  transition: transform .35s cubic-bezier(.16, 1, .3, 1), box-shadow .35s;
+}
+.service-card .service-cta span {
+  margin-left: 0;
+  color: #16a34a;
+  font-size: 13px;
+  transition: transform .35s cubic-bezier(.16, 1, .3, 1);
+}
+.service-card .service-cta::before {
+  content: "";
+  position: absolute;
+  top: -60%;
+  left: -120px;
+  width: 80px;
+  height: 220%;
+  transform: rotate(20deg);
+  background: linear-gradient(90deg, transparent, rgba(34, 197, 94, .35), transparent);
+  transition: left .7s;
+}
+.service-card .service-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(34, 197, 94, .32);
+}
+.service-card .service-cta:hover::before { left: 130%; }
+.service-card .service-cta:hover span { transform: translate(3px, -3px); }
 
 /* --- Projects: a horizontal "commit rail" with flip cards -------------
    Drag it or scroll over it (wheel is redirected to horizontal movement

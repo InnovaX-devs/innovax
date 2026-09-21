@@ -9,10 +9,23 @@ const CONTACT = {
   phoneHref: "tel:+5490000000000",
 };
 
+const ERP_URL = "https://landing-page-erp-nine.vercel.app/";
+
 const services = [
-  { tag: "software.build()", title: "Desarrollo de software", description: "Soluciones a medida para optimizar procesos, resolver problemas y convertir ideas en productos reales.", status: "en producción" },
-  { tag: "web.deploy()", title: "Desarrollo web", description: "Experiencias web rápidas, responsive y modernas, diseñadas para representar marcas y generar resultados.", status: "en producción" },
-  { tag: "shop.launch()", title: "E-commerce", description: "Tiendas online a medida, con pasarelas de pago, gestión de stock y checkout pensado para vender sin fricción.", status: "en producción" },
+  {
+    tag: "software.build()",
+    title: "STOCKEA",
+    by: "by InnovaX",
+    description:
+      "Todo tu negocio bajo control. Para comercios, pymes y emprendedores que quieren crecer con orden.",
+    status: "nuevo",
+    featured: true,
+    modules: ["stock", "ventas", "compras", "presupuestos", "caja"],
+    cta: "Ver planes",
+    href: ERP_URL,
+  },
+  { tag: "web.deploy()", title: "Desarrollo web", description: "Experiencias web rápidas, responsive y modernas, diseñadas para representar marcas y generar resultados.", status: "activo" },
+  { tag: "shop.launch()", title: "E-commerce", description: "Tiendas online a medida, con pasarelas de pago, gestión de stock y checkout pensado para vender sin fricción.", status: "activo" },
   { tag: "system.scale()", title: "Sistemas a medida", description: "Plataformas construidas alrededor de la forma real de trabajar de cada empresa.", status: "activo" },
   { tag: "api.connect()", title: "Integraciones & APIs", description: "Conectamos servicios y sistemas para eliminar tareas manuales y automatizar procesos.", status: "activo" },
 ];
@@ -621,19 +634,44 @@ function App() {
           <div className="services-track">
             {[...services, ...services].map((service, index) => (
               <article
-                className="service-card"
+                className={`service-card ${service.featured ? "service-card-featured" : ""}`}
                 key={`${service.tag}-${index}`}
                 onMouseMove={handleCardTilt}
                 onMouseLeave={resetCardTilt}
               >
                 <div className="service-top">
                   <span className="service-tag">{service.tag}</span>
-                  <span className="service-status"><i /> {service.status}</span>
+                  <span className={`service-status ${service.featured ? "is-new" : ""}`}>
+                    <i /> {service.status}
+                  </span>
                 </div>
                 <div className="service-content">
-                  <h3>{service.title}</h3>
+                  <h3>
+                    {service.title}
+                    {service.by && <> <span className="service-by">{service.by}</span></>}
+                  </h3>
                   <p>{service.description}</p>
-                  <a href="#contacto">Conocer más <span>↗</span></a>
+
+                  {service.modules && (
+                    <ul className="service-modules">
+                      {service.modules.map((m) => (
+                        <li key={m}>{m}</li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {service.href ? (
+                    <a
+                      className="service-cta"
+                      href={service.href}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {service.cta} <span>↗</span>
+                    </a>
+                  ) : (
+                    <a href="#contacto">Conocer más <span>↗</span></a>
+                  )}
                 </div>
                 <div className="card-corner" />
               </article>
