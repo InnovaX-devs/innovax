@@ -444,13 +444,18 @@ function App() {
     if (!track) return;
 
     let raf;
-    const SPEED = 0.55; // px per frame, ~33px/s at 60fps
+    let lastTime = null;
+    const SPEED_PER_SEC = 33; // px/second, independent of frame rate/device speed
 
-    const loop = () => {
+    const loop = (timestamp) => {
       const half = track.scrollWidth / 2;
 
-      if (!isHoveringServices.current && !prefersReducedMotion() && half > 0) {
-        track.scrollLeft += SPEED;
+      if (lastTime === null) lastTime = timestamp;
+      const deltaMs = timestamp - lastTime;
+      lastTime = timestamp;
+
+      if (!isHoveringServices.current && half > 0) {
+        track.scrollLeft += (SPEED_PER_SEC * deltaMs) / 1000;
       }
 
       if (half > 0) {
