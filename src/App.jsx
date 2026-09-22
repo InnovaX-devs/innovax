@@ -385,6 +385,11 @@ function App() {
   const dragMoved = useRef(false);
   const dragStart = useRef({ x: 0, scrollLeft: 0 });
 
+  const servicesTrackRef = useRef(null);
+  const isDraggingServices = useRef(false);
+  const dragStartServices = useRef({ x: 0, scrollLeft: 0 });
+  const isHoveringServices = useRef(false);
+
   useEffect(() => {
     const elements = document.querySelectorAll(".reveal, .reveal-card");
     const observer = new IntersectionObserver(
@@ -426,6 +431,51 @@ function App() {
       track.removeEventListener("wheel", handleWheel);
       track.removeEventListener("scroll", handleScroll);
     };
+  }, []);
+
+  // Services strip: auto-scrolls on its own, non-stop, via rAF. The ONLY
+  // thing that pauses it is the cursor resting on top of one specific
+  // card (isHoveringServices, toggled per-card below) — dragging or
+  // wheel-scrolling it never pauses the movement, it just adds on top.
+  // Content is duplicated once, so we wrap scrollLeft back to 0 the
+  // instant it passes the halfway point, for a seamless loop either way.
+  useEffect(() => {
+    const track = servicesTrackRef.current;
+    if (!track) return;
+
+    let raf;
+    const SPEED = 0.55; // px per frame, ~33px/s at 60fps
+
+    const loop = () => {
+      const half = track.scrollWidth / 2;
+
+      if (!isHoveringServices.current && !prefersReducedMotion() && half > 0) {
+        track.scrollLeft += SPEED;
+      }
+
+      if (half > 0) {
+        if (track.scrollLeft >= half) track.scrollLeft -= half;
+        else if (track.scrollLeft < 0) track.scrollLeft += half;
+      }
+
+      raf = requestAnimationFrame(loop);
+    };
+
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  useEffect(() => {
+    const track = servicesTrackRef.current;
+    if (!track) return;
+
+    const handleWheel = (e) => {
+      e.preventDefault();
+      track.scrollLeft += e.deltaY !== 0 ? e.deltaY : e.deltaX;
+    };
+
+    track.addEventListener("wheel", handleWheel, { passive: false });
+    return () => track.removeEventListener("wheel", handleWheel);
   }, []);
 
   useEffect(() => {
@@ -479,6 +529,32 @@ function App() {
   const endDrag = () => {
     isDragging.current = false;
     trackRef.current?.classList.remove("is-dragging");
+  };
+
+  const handleServicesPointerDown = (e) => {
+    if (e.pointerType !== "mouse" || !servicesTrackRef.current) return;
+    isDraggingServices.current = true;
+    dragStartServices.current = { x: e.clientX, scrollLeft: servicesTrackRef.current.scrollLeft };
+    servicesTrackRef.current.classList.add("is-dragging");
+  };
+
+  const handleServicesPointerMove = (e) => {
+    if (!isDraggingServices.current || !servicesTrackRef.current) return;
+    const delta = e.clientX - dragStartServices.current.x;
+    servicesTrackRef.current.scrollLeft = dragStartServices.current.scrollLeft - delta;
+  };
+
+  const endServicesDrag = () => {
+    isDraggingServices.current = false;
+    servicesTrackRef.current?.classList.remove("is-dragging");
+  };
+
+  const handleServiceCardEnter = () => {
+    isHoveringServices.current = true;
+  };
+
+  const handleServiceCardLeave = () => {
+    isHoveringServices.current = false;
   };
 
   const scrollToProject = (index) => {
@@ -630,14 +706,29 @@ function App() {
         </section>
 
         <div className="services-marquee">
-          <span className="services-marquee-hint">auto-scroll · hover para pausar</span>
-          <div className="services-track">
+          <span className="services-marquee-hint">arrastrá o scrolleá</span>
+          <div
+            className="services-track"
+            ref={servicesTrackRef}
+            onPointerDown={handleServicesPointerDown}
+            onPointerMove={handleServicesPointerMove}
+            onPointerUp={endServicesDrag}
+            onPointerLeave={endServicesDrag}
+            onPointerCancel={endServicesDrag}
+            onTouchStart={handleServiceCardEnter}
+            onTouchEnd={handleServiceCardLeave}
+            onTouchCancel={handleServiceCardLeave}
+          >
             {[...services, ...services].map((service, index) => (
               <article
                 className={`service-card ${service.featured ? "service-card-featured" : ""}`}
                 key={`${service.tag}-${index}`}
+                onMouseEnter={handleServiceCardEnter}
                 onMouseMove={handleCardTilt}
-                onMouseLeave={resetCardTilt}
+                onMouseLeave={(e) => {
+                  resetCardTilt(e);
+                  handleServiceCardLeave();
+                }}
               >
                 <div className="service-top">
                   <span className="service-tag">{service.tag}</span>
