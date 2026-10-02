@@ -67,13 +67,6 @@ const differences = [
   ["--direct", "Comunicación directa", "Un equipo chico, cercano y enfocado en entender lo que realmente necesitás."],
 ];
 
-const team = [
-  { slug: "pilar-orlando", name: "Pilar Orlando", linkedin: "https://linkedin.com/in/pilar-orlando" },
-  { slug: "mateo-calcagno", name: "Mateo Calcagno", linkedin: "https://linkedin.com/in/mateo-calcagno" },
-  { slug: "milagros-delfino", name: "Milagros Delfino", linkedin: "https://linkedin.com/in/miladelfino" },
-  { slug: "elias-raimundo", name: "Elias Raimundo", linkedin: "https://linkedin.com/in/elias-raimundo" },
-];
-
 // ---------------------------------------------------------------------------
 // Real, hand-drawn icons (no external icon package required).
 // ---------------------------------------------------------------------------
@@ -640,7 +633,6 @@ function App() {
         <nav>
           <a href="#servicios" onClick={closeMenu}>Servicios</a>
           <a href="#proyectos" onClick={closeMenu}>Proyectos</a>
-          <a href="#equipo" onClick={closeMenu}>Equipo</a>
           <a href="#contacto" onClick={closeMenu}>Contacto</a>
         </nav>
 
@@ -945,35 +937,6 @@ function App() {
             </div>
           </div>
         </section>
-
-        <section id="equipo" className="section team reveal">
-          <div className="section-intro">
-            <div>
-              <div className="section-label">05 / TEAM</div>
-              <h2>Personas detrás<br />de <Scramble as="span" className="accent" text="InnovaX." /></h2>
-            </div>
-            <p>Un equipo multidisciplinario que combina ingeniería, diseño y visión de producto.</p>
-          </div>
-
-          <div className="team-grid">
-            {team.map((member, index) => (
-              <article className="team-card reveal-card" key={member.slug}>
-                <div className="team-photo">
-                  <div className="team-photo-frame">
-                    <img src={`/team/${member.slug}.png`} alt={member.name} />
-                  </div>
-                </div>
-                <div className="team-info">
-                  <a className="team-role" href={member.linkedin} target="_blank" rel="noreferrer">
-                    <IconLinkedIn className="team-role-icon" /> LinkedIn
-                  </a>
-                  <h3>{member.name}</h3>
-                  <p>Co-Founder y Full Stack Dev</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
       </main>
 
       <footer className="site-footer" id="footer">
@@ -991,7 +954,6 @@ function App() {
             <a href="#inicio">Inicio</a>
             <a href="#servicios">Servicios</a>
             <a href="#proyectos">Proyectos</a>
-            <a href="#equipo">Equipo</a>
             <a href="#contacto">Contacto</a>
           </nav>
 
