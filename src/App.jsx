@@ -15,14 +15,28 @@ const services = [
   {
     tag: "software.build()",
     title: "STOCKEA",
+    theme: "stockea",
     by: "by InnovaX",
     description:
       "Todo tu negocio bajo control. Para comercios, pymes y emprendedores que quieren crecer con orden.",
-    status: "nuevo",
+    status: "activo",
     featured: true,
-    modules: ["stock", "ventas", "compras", "presupuestos", "caja"],
+    modules: ["stock", "ventas", "compras", "reportes", "caja", "clientes", "sucursales"],
     cta: "Ver planes",
     href: ERP_URL,
+  },
+  {
+    tag: "software.build()",
+    title: "TURNEA",
+    theme: "turneo",
+    by: "by InnovaX",
+    description:
+      "Tus turnos, sin llamadas ni esperas. Tus clientes reservan online y vos controlás agenda, profesionales, servicios, caja y reportes.",
+    status: "nuevo",
+    featured: true,
+    modules: ["agenda", "turnos online", "profesionales", "servicios", "clientes", "caja", "reportes"],
+    cta: "Conocé más",
+    href: "#contacto", // cuando Turneo tenga su propia landing, poné la URL acá
   },
   { tag: "web.deploy()", title: "Desarrollo web", description: "Experiencias web rápidas, responsive y modernas, diseñadas para representar marcas y generar resultados.", status: "activo" },
   { tag: "shop.launch()", title: "E-commerce", description: "Tiendas online a medida, con pasarelas de pago, gestión de stock y checkout pensado para vender sin fricción.", status: "activo" },
@@ -30,34 +44,14 @@ const services = [
   { tag: "api.connect()", title: "Integraciones & APIs", description: "Conectamos servicios y sistemas para eliminar tareas manuales y automatizar procesos.", status: "activo" },
 ];
 
-const projects = [
-  {
-    number: "01",
-    category: "Full-Stack / ERP",
-    title: "KJ Importados — ERP a medida",
-    preview: "/projects/01-kj-erp.mp4",
-    description:
-      "Sistema de gestión a medida para un negocio real de venta de perfumes: productos y fraccionamiento en decants, ventas, compras, presupuestos, finanzas y dashboard en un solo lugar.",
-    branch: "feat/kj-perfumes-erp",
-  },
-  {
-    number: "02",
-    category: "Full-Stack / Gestión",
-    title: "Sistema de Gestión para Bodegas",
-    preview: "/projects/03-gestion-bodegas.mp4",
-    description:
-      "Sistema de gestión para bodegas que permite administrar productos, ventas, clientes y configuración del negocio mediante una interfaz web moderna y segura.",
-    branch: "feat/gestion-bodegas",
-  },
-  {
-    number: "03",
-    category: "Desktop / Gestión",
-    title: "MANAPASEGUR S.A.S.",
-    preview: "/projects/02-manapasegur.mp4",
-    description:
-      "Sistema de escritorio para una empresa de seguridad privada: gestión de empleados, puestos y turnos, con generación automática de cronogramas mensuales y envío por email en PDF.",
-    branch: "feat/manapasegur-desktop",
-  },
+// Logos de clientes. Guardá cada imagen en /public/logos/ con estos nombres
+// (cuadradas, idealmente PNG o WebP). Si falta alguna, la card muestra las iniciales.
+const clients = [
+  { number: "", name: "KJ Importtados", initials: "KJ", logo: "/logos/kj-importtados.png" },
+  { number: "", name: "Dogo Barber Shop", initials: "DB", logo: "/logos/dogo-barber-shop.png" },
+  { number: "", name: "El Budagón", initials: "EB", logo: "/logos/el-budagon.png" },
+  { number: "", name: "Manapasegur", initials: "MS", logo: "/logos/manapasegur.png" },
+  { number: "", name: "NutriExpress", initials: "NE", logo: "/logos/nutriexpress.png" },
 ];
 
 const differences = [
@@ -154,7 +148,7 @@ function CustomCursor() {
 
     const grow = () => document.body.classList.add("cursor-hover");
     const shrink = () => document.body.classList.remove("cursor-hover");
-    const interactive = document.querySelectorAll("a, button, .project-card, input, textarea");
+    const interactive = document.querySelectorAll("a, button, .client-card, input, textarea");
     interactive.forEach((el) => {
       el.addEventListener("mouseenter", grow);
       el.addEventListener("mouseleave", shrink);
@@ -289,6 +283,26 @@ function Scramble({ text, as: Tag = "span", className }) {
   );
 }
 
+// Logo de cliente: si la imagen no carga, muestra las iniciales.
+function ClientLogo({ client }) {
+  const [failed, setFailed] = useState(false);
+
+  return (
+    <div className="client-logo">
+      {failed ? (
+        <span className="client-initials">{client.initials}</span>
+      ) : (
+        <img
+          src={client.logo}
+          alt={`Logo de ${client.name}`}
+          loading="lazy"
+          onError={() => setFailed(true)}
+        />
+      )}
+    </div>
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Terminal signature — a small, live "build log" for InnovaX itself.
 // ---------------------------------------------------------------------------
@@ -367,16 +381,7 @@ function TerminalSignature() {
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeProcess, setActiveProcess] = useState(0);
-  const [flippedCards, setFlippedCards] = useState(() => new Set());
-  const [activeProject, setActiveProject] = useState(0);
   const [formStatus, setFormStatus] = useState("idle");
-  const [lightboxSrc, setLightboxSrc] = useState(null);
-
-  const trackRef = useRef(null);
-  const isDragging = useRef(false);
-  const dragMoved = useRef(false);
-  const dragStart = useRef({ x: 0, scrollLeft: 0 });
 
   const servicesTrackRef = useRef(null);
   const isDraggingServices = useRef(false);
@@ -393,37 +398,6 @@ function App() {
     );
     elements.forEach((element) => observer.observe(element));
     return () => observer.disconnect();
-  }, []);
-
-  // Horizontal "commit rail": mouse-wheel and drag both move the track
-  // sideways, so the projects section breaks out of the vertical scroll.
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    const handleWheel = (e) => {
-      if (prefersReducedMotion()) return;
-      const { scrollLeft, scrollWidth, clientWidth } = track;
-      const atStart = scrollLeft <= 2;
-      const atEnd = scrollLeft >= scrollWidth - clientWidth - 2;
-      const goingDown = e.deltaY > 0;
-      if ((atEnd && goingDown) || (atStart && !goingDown)) return;
-      e.preventDefault();
-      track.scrollLeft += e.deltaY;
-    };
-
-    const handleScroll = () => {
-      const cardWidth = track.scrollWidth / projects.length;
-      const idx = Math.round(track.scrollLeft / cardWidth);
-      setActiveProject(Math.min(projects.length - 1, Math.max(0, idx)));
-    };
-
-    track.addEventListener("wheel", handleWheel, { passive: false });
-    track.addEventListener("scroll", handleScroll, { passive: true });
-    return () => {
-      track.removeEventListener("wheel", handleWheel);
-      track.removeEventListener("scroll", handleScroll);
-    };
   }, []);
 
   // Services strip: auto-scrolls on its own, non-stop, via rAF. The ONLY
@@ -476,58 +450,7 @@ function App() {
     return () => track.removeEventListener("wheel", handleWheel);
   }, []);
 
-  useEffect(() => {
-    document.body.style.overflow = lightboxSrc !== null ? "hidden" : "";
-    const onKey = (e) => {
-      if (e.key === "Escape" && lightboxSrc) closeLightbox();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [lightboxSrc]);
-
   const closeMenu = () => setMenuOpen(false);
-
-  const toggleFlip = (index) => {
-    if (dragMoved.current) {
-      dragMoved.current = false;
-      return;
-    }
-    setFlippedCards((prev) => {
-      const next = new Set(prev);
-      if (next.has(index)) next.delete(index);
-      else next.add(index);
-      return next;
-    });
-  };
-
-  const openLightbox = (e, src) => {
-    e.stopPropagation(); 
-    setLightboxSrc(src);
-  };
-  const closeLightbox = () => setLightboxSrc(null);
-
-  const handlePointerDown = (e) => {
-    if (e.pointerType !== "mouse" || !trackRef.current) return;
-    isDragging.current = true;
-    dragMoved.current = false;
-    dragStart.current = { x: e.clientX, scrollLeft: trackRef.current.scrollLeft };
-    trackRef.current.classList.add("is-dragging");
-  };
-
-  const handlePointerMove = (e) => {
-    if (!isDragging.current || !trackRef.current) return;
-    const delta = e.clientX - dragStart.current.x;
-    if (Math.abs(delta) > 5) dragMoved.current = true;
-    trackRef.current.scrollLeft = dragStart.current.scrollLeft - delta;
-  };
-
-  const endDrag = () => {
-    isDragging.current = false;
-    trackRef.current?.classList.remove("is-dragging");
-  };
 
   const handleServicesPointerDown = (e) => {
     if (e.pointerType !== "mouse" || !servicesTrackRef.current) return;
@@ -553,13 +476,6 @@ function App() {
 
   const handleServiceCardLeave = () => {
     isHoveringServices.current = false;
-  };
-
-  const scrollToProject = (index) => {
-    const track = trackRef.current;
-    if (!track) return;
-    const cardWidth = track.scrollWidth / projects.length;
-    track.scrollTo({ left: cardWidth * index, behavior: "smooth" });
   };
 
   const FORMSPREE_URL = "https://formspree.io/f/mljeevwb";
@@ -632,15 +548,15 @@ function App() {
 
         <nav>
           <a href="#servicios" onClick={closeMenu}>Servicios</a>
-          <a href="#proyectos" onClick={closeMenu}>Proyectos</a>
+          <a href="#proyectos" onClick={closeMenu}>Clientes</a>
           <a href="#contacto" onClick={closeMenu}>Contacto</a>
         </nav>
 
         <Magnetic>
-        <a href="#contacto" className="nav-button" onClick={closeMenu}>
-          Hablemos <span>↗</span>
-        </a>
-      </Magnetic>
+          <a href="#contacto" className="nav-button" onClick={closeMenu}>
+            Hablemos <span>↗</span>
+          </a>
+        </Magnetic>
       </header>
 
       <main>
@@ -670,7 +586,7 @@ function App() {
 
             <div className="hero-buttons hero-animation">
               <Magnetic>
-                <a href="#proyectos" className="button primary">Explorar proyectos <span>↗</span></a>
+                <a href="#proyectos" className="button primary">Ver clientes <span>↗</span></a>
               </Magnetic>
               <Magnetic>
                 <a href="#contacto" className="button secondary">Contanos tu idea</a>
@@ -718,7 +634,7 @@ function App() {
           >
             {[...services, ...services].map((service, index) => (
               <article
-                className={`service-card ${service.featured ? "service-card-featured" : ""}`}
+                className={`service-card ${service.featured ? "service-card-featured" : ""} ${service.theme ? `service-card-${service.theme}` : ""}`}
                 key={`${service.tag}-${index}`}
                 onMouseEnter={handleServiceCardEnter}
                 onMouseMove={handleCardTilt}
@@ -752,7 +668,7 @@ function App() {
                     <a
                       className="service-cta"
                       href={service.href}
-                      target="_blank"
+                      target={service.href.startsWith("#") ? undefined : "_blank"}
                       rel="noreferrer"
                     >
                       {service.cta} <span>↗</span>
@@ -767,103 +683,31 @@ function App() {
           </div>
         </div>
 
-        <section id="proyectos" className="section projects reveal">
+        <section id="proyectos" className="section clients reveal">
           <div className="section-intro">
             <div>
-              <div className="section-label">02 / SELECTED WORK</div>
+              <div className="section-label">02 / CLIENTS</div>
               <h2><Scramble as="span" className="accent-violet" text="Creación" /><br />con propósito.</h2>
             </div>
-            <p>Proyectos que combinan producto, ingeniería y diseño para transformar necesidades concretas en soluciones digitales. Arrastrá, scrolleá o hacé click: la card elegida gira en su lugar para mostrar el detalle.</p>
+            <p>Clientes que confiaron en nosotros. Negocios que trabajan con sistemas desarrollados por InnovaX.</p>
           </div>
 
-          <div
-            className={`projects-track ${flippedCards.size > 0 ? "has-active" : ""}`}
-            ref={trackRef}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={endDrag}
-            onPointerLeave={endDrag}
-          >
-            {projects.map((project, index) => (
-              <article
-                className={`project-card project-${index + 1} reveal-card ${flippedCards.has(index) ? "is-flipped" : ""} ${
-                  flippedCards.size > 0 && !flippedCards.has(index) ? "is-dimmed" : ""
-                }`}
-                key={project.number}
-                onClick={() => toggleFlip(index)}
-              >
-                <div className="card-flip-inner">
-                  <div className="card-face card-face-front">
-                    <div className="project-header">
-                      <span>{project.number}</span>
-                      <span>{project.category}</span>
-                    </div>
-                    <div className="project-media">
-                      <video
-                        src={project.preview}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        onClick={(e) => openLightbox(e, project.preview)}
-                        aria-label={`Demo de ${project.title}`}
-                      />
-                    </div>
-                    <div className="project-content">
-                      <h3>{project.title}</h3>
-                    </div>
-                    <span className="flip-hint">+ Ver Más</span>
-                  </div>
-
-                  <div className="card-face card-face-back">
-                    <div className="project-header">
-                      <span>{project.number}</span>
-                      <span>DETAILS</span>
-                    </div>
-                    <div className="project-content">
-                      <h3>{project.title}</h3>
-                      <p className="project-description">{project.description}</p>
-                      <ul className="project-highlights">
-                      </ul>
-                      <div className="project-gitline">
-                        <span className="git-branch">⎇ {project.branch}</span>
-                      </div>
-                      <a href="#contacto">Hablemos de esto <span>↗</span></a>
-                    </div>
-                  </div>
-                </div>
+          <div className="clients-grid">
+            {clients.map((client) => (
+              <article className="client-card reveal-card" key={client.number}>
+                <span className="client-number">{client.number}</span>
+                <ClientLogo client={client} />
+                <h3>{client.name}</h3>
               </article>
             ))}
           </div>
-
-          <div className="projects-rail">
-            <span className="rail-hint">arrastrá o scrolleá →</span>
-            <div className="rail-dots">
-              {projects.map((project, index) => (
-                <button
-                  type="button"
-                  key={project.number}
-                  className={`rail-dot ${activeProject === index ? "active" : ""}`}
-                  onClick={() => scrollToProject(index)}
-                  aria-label={`Ver proyecto ${project.title}`}
-                />
-              ))}
-            </div>
-          </div>
         </section>
-
-        {lightboxSrc && (
-          <div className="video-lightbox" onClick={closeLightbox}>
-            <button className="close-lightbox" onClick={closeLightbox} aria-label="Cerrar video">✕</button>
-            <video src={lightboxSrc} controls autoPlay loop onClick={(e) => e.stopPropagation()} />
-          </div>
-        )}
 
         <section className="manifesto reveal">
           <div className="manifesto-top">
             <div className="section-label">03 / HOW WE WORK</div>
             <h2><Scramble as="span" className="accent-transform" text="Transformación" /><br />con impacto.</h2>
-             <p>En InnovaX convertimos ideas en software que funciona. Desarrollo, diseño y producto, en un mismo equipo.</p>
+            <p>En InnovaX convertimos ideas en software que funciona. Desarrollo, diseño y producto, en un mismo equipo.</p>
           </div>
           <div className="difference-strip">
             <span className="difference-strip-label">Por qué InnovaX</span>
@@ -953,7 +797,7 @@ function App() {
             <span className="footer-heading">Navegación</span>
             <a href="#inicio">Inicio</a>
             <a href="#servicios">Servicios</a>
-            <a href="#proyectos">Proyectos</a>
+            <a href="#proyectos">Clientes</a>
             <a href="#contacto">Contacto</a>
           </nav>
 
