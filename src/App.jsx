@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./index.css";
+import { PRODUCTS, SiteNavbar, ProductPage, ProductFooter, useHashRoute } from "./products";
 
 const CONTACT = {
   instagramHandle: "innovax.team",
@@ -8,8 +9,6 @@ const CONTACT = {
   whatsappUrl: "https://wa.me/5493584257936",
   phoneHref: "tel:+5490000000000",
 };
-
-const ERP_URL = "https://landing-page-erp-nine.vercel.app/";
 
 const services = [
   {
@@ -23,7 +22,7 @@ const services = [
     featured: true,
     modules: ["stock", "ventas", "compras", "reportes", "caja", "clientes", "sucursales"],
     cta: "Ver planes",
-    href: ERP_URL,
+    href: "#/stockea",
   },
   {
     tag: "software.build()",
@@ -35,8 +34,8 @@ const services = [
     status: "nuevo",
     featured: true,
     modules: ["agenda", "turnos online", "profesionales", "servicios", "clientes", "caja", "reportes"],
-    cta: "Conocé más",
-    href: "#contacto", // cuando Turneo tenga su propia landing, poné la URL acá
+    cta: "Ver planes",
+    href: "#/turnea",
   },
   { tag: "web.deploy()", title: "Desarrollo web", description: "Experiencias web rápidas, responsive y modernas, diseñadas para representar marcas y generar resultados.", status: "activo" },
   { tag: "shop.launch()", title: "E-commerce", description: "Tiendas online a medida, con pasarelas de pago, gestión de stock y checkout pensado para vender sin fricción.", status: "activo" },
@@ -163,6 +162,7 @@ function CustomCursor() {
         el.removeEventListener("mouseenter", grow);
         el.removeEventListener("mouseleave", shrink);
       });
+      document.body.classList.remove("cursor-hover");
       cancelAnimationFrame(raf);
     };
   }, []);
@@ -379,8 +379,10 @@ function TerminalSignature() {
   );
 }
 
-function App() {
-  const [menuOpen, setMenuOpen] = useState(false);
+// ---------------------------------------------------------------------------
+// Página de inicio (antes era todo `App`)
+// ---------------------------------------------------------------------------
+function Home() {
   const [formStatus, setFormStatus] = useState("idle");
 
   const servicesTrackRef = useRef(null);
@@ -449,8 +451,6 @@ function App() {
     track.addEventListener("wheel", handleWheel, { passive: false });
     return () => track.removeEventListener("wheel", handleWheel);
   }, []);
-
-  const closeMenu = () => setMenuOpen(false);
 
   const handleServicesPointerDown = (e) => {
     if (e.pointerType !== "mouse" || !servicesTrackRef.current) return;
@@ -530,34 +530,7 @@ function App() {
       <CustomCursor />
       <ScrollProgress />
 
-      <header className={`navbar ${menuOpen ? "menu-open" : ""}`}>
-        <a href="#inicio" className="brand" onClick={closeMenu}>
-          <img src="/innovax-logo.png" alt="InnovaX" />
-          <span>InnovaX</span>
-        </a>
-
-        <button
-          className="menu-toggle"
-          onClick={() => setMenuOpen((value) => !value)}
-          aria-label="Abrir menú"
-          aria-expanded={menuOpen}
-        >
-          <span />
-          <span />
-        </button>
-
-        <nav>
-          <a href="#servicios" onClick={closeMenu}>Servicios</a>
-          <a href="#proyectos" onClick={closeMenu}>Clientes</a>
-          <a href="#contacto" onClick={closeMenu}>Contacto</a>
-        </nav>
-
-        <Magnetic>
-          <a href="#contacto" className="nav-button" onClick={closeMenu}>
-            Hablemos <span>↗</span>
-          </a>
-        </Magnetic>
-      </header>
+      <SiteNavbar route="/" />
 
       <main>
         <section id="inicio" className="hero">
@@ -694,7 +667,7 @@ function App() {
 
           <div className="clients-grid">
             {clients.map((client) => (
-              <article className="client-card reveal-card" key={client.number}>
+              <article className="client-card reveal-card" key={client.name}>
                 <span className="client-number">{client.number}</span>
                 <ClientLogo client={client} />
                 <h3>{client.name}</h3>
@@ -797,6 +770,8 @@ function App() {
             <span className="footer-heading">Navegación</span>
             <a href="#inicio">Inicio</a>
             <a href="#servicios">Servicios</a>
+            <a href="#/stockea">Stockea</a>
+            <a href="#/turnea">Turnea</a>
             <a href="#proyectos">Clientes</a>
             <a href="#contacto">Contacto</a>
           </nav>
@@ -841,6 +816,28 @@ function App() {
           <IconLinkedIn className="floating-icon" />
         </a>
       </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// App: elige entre el inicio y las páginas de producto (#/stockea, #/turnea)
+// ---------------------------------------------------------------------------
+function App() {
+  const route = useHashRoute();
+  const product = PRODUCTS[route];
+
+  if (!product) return <Home />;
+
+  return (
+    <div className="site">
+      <div className="noise" />
+      <div className="grid-overlay" />
+      <CustomCursor key={route} />
+      <ScrollProgress />
+      <SiteNavbar route={route} />
+      <ProductPage product={product} />
+      <ProductFooter />
     </div>
   );
 }
