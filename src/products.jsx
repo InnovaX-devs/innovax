@@ -38,11 +38,12 @@ export const PRODUCTS = {
         discount: "-27%",
         desc: "Para gestionar tu negocio de forma simple y ordenada.",
         features: [
-          "Productos, categorías y marcas",
-          "Control de stock",
-          "Ventas e historial",
-          "Ficha de clientes",
-          "Panel con métricas básicas",
+          "Ventas rápidas con lector de códigos",
+          "Control de stock con alertas",
+          "Clientes con cuenta corriente",
+          "Compras y proveedores",
+          "Registro de gastos",
+          "Catálogo y lista de precios en PDF",
         ],
         cta: "Empezar con Start",
       },
@@ -54,12 +55,13 @@ export const PRODUCTS = {
         discount: "-30%",
         desc: "Para tener una gestión más completa y controlar cada movimiento.",
         features: [
-          "Todas las funcionalidades del plan Start",
-          "Compras y proveedores",
-          "Presupuestos para clientes",
-          "Cuenta corriente y cobro de deuda",
-          "Caja, gastos y flujo de caja",
-          "Reportes exportables en PDF",
+          "Todo lo del plan Start, más:",
+          "Factura electrónica ARCA",
+          "Ventas sin conexión",
+          "Cierre de caja por turno",
+          "Tickets en impresora térmica",
+          "Empleados y varias sucursales",
+          "Reportes completos, flujo de caja y dólares",
         ],
         highlight: true,
         cta: "Empezar con Pro",
@@ -72,11 +74,60 @@ export const PRODUCTS = {
           "Todas las funcionalidades del plan Pro",
           "Adaptado a tu rubro y flujo de trabajo",
           "Integraciones (facturación, pagos, WhatsApp)",
-          "Multi-sucursal",
+          "Migración de tus datos",
           "Marca propia",
           "Soporte dedicado y onboarding asistido",
         ],
         cta: "Hablar con el equipo",
+      },
+    ],
+    // Tabla "Compará los planes". Valores: true = ✓, false = —, o un texto.
+    // El orden de cada fila es [Start, Pro, Custom].
+    comparison: [
+      {
+        group: "Ventas",
+        rows: [
+          ["Venta rápida con lector de código de barras", true, true, true],
+          ["Vuelto, descuentos y pago mixto", true, true, true],
+          ["Tickets en impresora térmica (comandera de 58 u 80 mm)", false, true, true],
+          ["Factura electrónica ARCA", false, true, true],
+          ["Ventas sin conexión", false, true, true],
+        ],
+      },
+      {
+        group: "Stock y productos",
+        rows: [
+          ["Productos con fotos, categorías y marcas", true, true, true],
+          ["Control de stock con alertas", true, true, true],
+          ["Talles y colores, gramos y litros", true, true, true],
+          ["Compras y proveedores", true, true, true],
+          ["Deuda y pagos a proveedores, con resumen en PDF", true, true, true],
+          ["Catálogo y lista de precios en PDF", true, true, true],
+          ["Etiquetas de precios para las góndolas", false, true, true],
+          ["Precios en dólares con cotización", false, true, true],
+        ],
+      },
+      {
+        group: "Clientes y caja",
+        rows: [
+          ["Cuenta corriente de clientes y resumen en PDF", true, true, true],
+          ["Registro de gastos", true, true, true],
+          ["Cierre de caja por turno", false, true, true],
+          ["Flujo de caja y análisis de gastos", false, true, true],
+          ["Reportes de ganancias e inventario en PDF", false, true, true],
+          ["Estado de resultados", false, true, true],
+          ["Cuentas por cobrar y por pagar", false, true, true],
+          ["Ventas por talle y color (ropa)", false, true, true],
+        ],
+      },
+      {
+        group: "Equipo",
+        rows: [
+          ["Usuarios", "1", "Vos + empleados", "A medida"],
+          ["Cambio rápido de usuario en la caja", false, true, true],
+          ["Varias sucursales y transferencias de stock", false, true, true],
+          ["Funciones a medida e integraciones", false, false, true],
+        ],
       },
     ],
   },
@@ -260,6 +311,70 @@ export function SiteNavbar({ route = "/" }) {
 }
 
 // ---------------------------------------------------------------------------
+// Tabla comparativa desplegable debajo de los planes
+// ---------------------------------------------------------------------------
+function PlanComparison({ plans, groups }) {
+  const [open, setOpen] = useState(false);
+  const proIndex = plans.findIndex((p) => p.highlight);
+
+  const renderCell = (value) => {
+    if (value === true) return <span className="cmp-yes" aria-label="Incluido">✓</span>;
+    if (value === false) return <span className="cmp-no" aria-label="No incluido">—</span>;
+    return <span className="cmp-text">{value}</span>;
+  };
+
+  return (
+    <div className={`plan-compare ${open ? "open" : ""}`}>
+      <button
+        type="button"
+        className="plan-compare-toggle"
+        aria-expanded={open}
+        aria-controls="plan-compare-table"
+        onClick={() => setOpen((o) => !o)}
+      >
+        {open ? "Ocultar comparación" : "Ver comparación de planes"}
+        <span className="chev">▾</span>
+      </button>
+
+      <div className="plan-compare-body" id="plan-compare-table">
+        <div className="plan-compare-inner">
+          <h3 className="plan-compare-title">Compará los planes</h3>
+          <div className="plan-compare-scroll">
+            <table className="plan-compare-table">
+              <thead>
+                <tr>
+                  <th scope="col">Función</th>
+                  {plans.map((p, i) => (
+                    <th scope="col" key={p.name} className={i === proIndex ? "cmp-hl" : ""}>
+                      {p.name}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              {groups.map((g) => (
+                <tbody key={g.group}>
+                  <tr className="cmp-group">
+                    <th colSpan={plans.length + 1} scope="colgroup">{g.group}</th>
+                  </tr>
+                  {g.rows.map(([label, ...values]) => (
+                    <tr key={label}>
+                      <th scope="row">{label}</th>
+                      {values.map((v, i) => (
+                        <td key={i}>{renderCell(v)}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              ))}
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Página de producto: hero + qué incluye + planes + contacto
 // ---------------------------------------------------------------------------
 export function ProductPage({ product }) {
@@ -350,6 +465,7 @@ export function ProductPage({ product }) {
           ))}
         </div>
         {product.plansNote && <p className="plans-note">{product.plansNote}</p>}
+        {product.comparison && <PlanComparison plans={product.plans} groups={product.comparison} />}
       </section>
 
       <section className="product-section product-final">
