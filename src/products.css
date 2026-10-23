@@ -87,9 +87,18 @@
   .product-hero-text, .product-hero-media { flex: 0 0 auto; }
   .product-hero-media { max-width: 600px; margin: 0 auto; }
 }
+/* El hero no recorta: así el brillo llega hasta el borde real de la pantalla.
+   El recorte horizontal lo hace la página (overflow-x: clip) para que no aparezca scroll. */
+html, body { overflow-x: clip; }
+.product-hero { overflow: visible; }
 .product-glow {
-  position: absolute; width: 520px; height: 520px; right: -120px; top: 60px; border-radius: 50%;
+  position: absolute; width: 520px; height: 520px; top: 60px; border-radius: 50%;
+  /* pegado al borde derecho de la ventana, no del contenedor */
+  right: calc((100% - 100vw) / 2 - 120px);
   background: rgba(var(--ac-rgb), .5); filter: blur(150px); opacity: .18; pointer-events: none;
+}
+@media (max-width: 650px) {
+  .product-glow { width: 380px; height: 380px; top: 40px; filter: blur(110px); }
 }
 .product .eyebrow { color: var(--ac); }
 .product .eyebrow span { background: var(--ac-bar); }
